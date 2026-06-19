@@ -1,36 +1,114 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ASSURANCE NATION — Frontend
 
-## Getting Started
+Interface web Next.js pour la plateforme de gestion des consultations médicales, prescriptions et remboursements de sécurité sociale.
 
-First, run the development server:
+## Prérequis
+
+- Node.js 18+
+- npm 9+
+- Backend Spring Boot en cours d'exécution (voir [backend README](../backend/README.md))
+
+## Installation
+
+```bash
+cd frontend
+npm install
+```
+
+## Configuration
+
+Copiez le fichier d'exemple et adaptez les variables :
+
+```bash
+cp .env.example .env.local
+```
+
+| Variable | Description | Valeur par défaut |
+|---|---|---|
+| `NEXT_PUBLIC_API_URL` | URL de l'API backend | `http://localhost:8080/api/v1` |
+| `NEXT_PUBLIC_APP_URL` | URL du frontend | `http://localhost:3000` |
+| `NEXT_PUBLIC_DEFAULT_THEME` | Thème par défaut (`light`, `dark`, `system`) | `light` |
+| `NEXT_PUBLIC_ENABLE_NOTIFICATIONS` | Activer les toasts | `true` |
+| `NEXT_PUBLIC_ENABLE_PDF_EXPORT` | Activer l'export PDF | `true` |
+
+## Démarrage
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+L'application est accessible sur [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Comptes de démonstration
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Rôle | Email | Mot de passe |
+|---|---|---|
+| Administrateur | `admin@assurance-nation.local` | `admin123` |
+| Médecin | `medecin.demo@assurance-nation.local` | `Password1!` |
+| Patient | `patient.demo@assurance-nation.local` | `Password1!` |
 
-## Learn More
+## Scripts disponibles
 
-To learn more about Next.js, take a look at the following resources:
+| Commande | Description |
+|---|---|
+| `npm run dev` | Serveur de développement |
+| `npm run build` | Build de production |
+| `npm run start` | Serveur de production |
+| `npm run lint` | Vérification ESLint |
+| `npm run test` | Tests unitaires (Vitest) |
+| `npm run test:coverage` | Tests avec couverture de code |
+| `npm run cypress:open` | Interface Cypress (E2E) |
+| `npm run cypress:run` | Tests E2E en mode headless |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Tests
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Tests unitaires
 
-## Deploy on Vercel
+```bash
+npm run test
+npm run test:coverage
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Tests E2E (Cypress)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Démarrez le serveur de développement, puis :
+
+```bash
+npm run cypress:open   # mode interactif
+npm run cypress:run    # mode CI
+```
+
+## Structure du projet
+
+```
+src/
+├── app/              # Pages Next.js (App Router)
+├── components/       # Composants réutilisables
+│   ├── common/       # Button, Input, Card, etc.
+│   ├── forms/        # Formulaires (Login, ChangePassword, etc.)
+│   ├── layout/       # PublicLayout, AuthLayout
+│   └── dashboard/    # StatCard, ReimbursementChart
+├── config/           # Routes, API, site
+├── context/          # Auth, Notifications
+├── hooks/            # Hooks personnalisés
+├── lib/              # API client, validators, utils
+├── styles/           # CSS global et thème
+└── types/            # Types TypeScript
+```
+
+## Stack technique
+
+- **Framework** : Next.js 14 (App Router)
+- **UI** : React 18, Tailwind CSS, Lucide icons
+- **État** : React Query, Context API
+- **Formulaires** : React Hook Form + Zod
+- **Thème** : next-themes (clair / sombre)
+- **Tests** : Vitest, Testing Library, Cypress
+
+## Couleurs de la marque
+
+| Couleur | Hex |
+|---|---|
+| Primary | `#0066CC` |
+| Navy | `#003366` |
+| Accent | `#00AA44` |

@@ -1,0 +1,18 @@
+.dark {
+  --color-primary: #0066CC;
+  --color-primary-dark: #1a5ec4;
+  --color-accent: #00AA44;
+  --color-white: #1f2937;
+  --color-gray-light: #111827;
+  --color-gray-medium: #374151;
+  --color-gray-dark: #d1d5db;
+  --color-text: #f3f4f6;
+  --color-text-secondary: #9ca3af;
+
+  --background: #0f172a;
+  --foreground: #f3f4f6;
+
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+}
