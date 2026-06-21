@@ -10,7 +10,7 @@ import {
   Search,
   Settings,
   User,
-} from "lucide-react";
+} from "@/components/icons";
 import { ThemeToggle } from "@/components/common/ThemeToggle";
 import { useAuth } from "@/context/AuthContext";
 import { useNotification } from "@/context/NotificationContext";

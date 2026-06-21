@@ -74,7 +74,7 @@
     "dosage": "Dosage",
     "duration": "Duration (days)",
     "medicalRecordId": "Medical record ID",
-    "amount": "Amount (€)",
+    "amount": "Amount (FCFA)",
     "paymentMethod": "Payment method",
     "bankTransfer": "Bank transfer",
     "cash": "Cash",

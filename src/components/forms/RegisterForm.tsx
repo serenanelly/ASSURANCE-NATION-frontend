@@ -16,7 +16,7 @@ import {
   Stethoscope,
   User,
   UserCircle,
-} from "lucide-react";
+} from "@/components/icons";
 import { Button } from "@/components/common/Button";
 import { Input } from "@/components/common/Input";
 import { Select } from "@/components/common/Select";
@@ -155,6 +155,7 @@ export function RegisterForm() {
     const payload: RegisterRequest = {
       email: data.email,
       password: data.password,
+      confirmPassword: data.confirmPassword,
       nom: data.nom,
       prenom: data.prenom,
       telephone: data.telephone,

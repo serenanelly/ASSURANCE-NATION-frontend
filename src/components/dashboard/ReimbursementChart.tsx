@@ -51,7 +51,7 @@ export function ReimbursementChart({
             <LineChart data={lineData}>
               <CartesianGrid strokeDasharray="3 3" className="stroke-gray-200 dark:stroke-gray-700" />
               <XAxis dataKey="mois" tick={{ fontSize: 12 }} />
-              <YAxis tick={{ fontSize: 12 }} tickFormatter={(v) => `${v}€`} />
+              <YAxis tick={{ fontSize: 12 }} tickFormatter={(v) => `${v} FCFA`} />
               <Tooltip
                 formatter={(value) => [
                   formatCurrency(Number(value ?? 0)),

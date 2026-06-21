@@ -20,7 +20,8 @@ export enum ReimbursementStatus {
 
 export enum PrescriptionType {
   MEDICAMENT = "MEDICAMENT",
-  CONSULTATION = "CONSULTATION",
+  // Wire value must match backend enum entity/enums/PrescriptionType.CONSULTATION_SPECIALISTE
+  CONSULTATION = "CONSULTATION_SPECIALISTE",
 }
 
 export enum TypeConsultation {
@@ -34,8 +35,9 @@ export enum ModePaiement {
 }
 
 export enum Sexe {
-  MASCULIN = "MASCULIN",
-  FEMININ = "FEMININ",
+  // Wire values must match backend enum entity/enums/Sexe (M, F)
+  MASCULIN = "M",
+  FEMININ = "F",
 }
 
 export enum Specialite {

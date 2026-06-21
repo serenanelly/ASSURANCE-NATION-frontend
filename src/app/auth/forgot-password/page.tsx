@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Mail } from "lucide-react";
+import { Mail } from "@/components/icons";
 import { AuthLayout } from "@/components/layout/AuthLayout";
 import { Button } from "@/components/common/Button";
 import { routes } from "@/config/routes";
@@ -13,8 +13,8 @@ export default function ForgotPasswordPage() {
       subtitle="Réinitialisation du mot de passe"
     >
       <div className="space-y-6 text-center">
-        <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-primary/10 text-primary">
-          <Mail className="h-7 w-7" aria-hidden />
+        <div className="text-primary">
+          <Mail className="mx-auto h-7 w-7" aria-hidden />
         </div>
 
         <p className="text-sm text-muted">

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, Bell } from "lucide-react";
+import { ArrowLeft, Bell } from "@/components/icons";
 import { Card } from "@/components/common/Card";
 import { ThemeToggle } from "@/components/common/ThemeToggle";
 import { ChangePasswordForm } from "@/components/forms/ChangePasswordForm";
@@ -64,7 +64,7 @@ export default function SettingsPage() {
         >
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
+              <div className="text-primary">
                 <Bell className="h-5 w-5" aria-hidden />
               </div>
               <div>

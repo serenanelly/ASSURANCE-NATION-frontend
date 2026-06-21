@@ -38,10 +38,10 @@ export function ReimbursementForm({ onSubmit, isSubmitting }: ReimbursementFormP
       />
 
       <Input
-        label="Montant total (€)"
+        label="Montant total (FCFA)"
         type="number"
-        step="0.01"
-        min="0.01"
+        step="1"
+        min="1"
         error={errors.montantTotal?.message}
         {...register("montantTotal", { valueAsNumber: true })}
       />

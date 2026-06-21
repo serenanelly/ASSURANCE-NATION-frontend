@@ -9,14 +9,14 @@ import {
   Phone,
   Settings,
   User as UserIcon,
-} from "lucide-react";
+} from "@/components/icons";
 import { Badge } from "@/components/common/Badge";
 import { Card } from "@/components/common/Card";
 import { Tabs } from "@/components/common/Tabs";
-import { StatCard } from "@/components/dashboard/StatCard";
+import { ProfileStats } from "@/components/dashboard/ProfileStats";
 import { useAuth } from "@/context/AuthContext";
 import { formatDate, formatFullName } from "@/lib/formatters";
-import { getInitials, hasRole, normalizeRoles } from "@/lib/utils";
+import { getInitials, normalizeRoles } from "@/lib/utils";
 import { routes } from "@/config/routes";
 import { Role, UserType } from "@/types/enums";
 
@@ -50,25 +50,20 @@ export default function ProfilePage() {
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-8 sm:px-6">
-      {/* Gradient header */}
-      <div className="relative overflow-hidden rounded-xl bg-gradient-to-r from-navy via-primary-dark to-primary">
-        <div className="absolute inset-0 bg-black/10" />
-        <div className="relative flex flex-col items-center px-6 py-10 sm:flex-row sm:items-end sm:gap-6 sm:pb-8 sm:pt-12">
-          <div className="flex h-24 w-24 shrink-0 items-center justify-center rounded-full border-4 border-white/30 bg-white/20 text-3xl font-bold text-white backdrop-blur-sm">
+      {/* Header */}
+      <div className="rounded-xl border border-gray-200 bg-card dark:border-gray-800">
+        <div className="flex flex-col items-center px-6 py-10 sm:flex-row sm:items-end sm:gap-6 sm:pb-8 sm:pt-12">
+          <div className="flex h-24 w-24 shrink-0 items-center justify-center rounded-full bg-primary text-3xl font-bold text-white">
             {initials}
           </div>
           <div className="mt-4 text-center sm:mt-0 sm:flex-1 sm:text-left">
-            <h1 className="text-2xl font-bold text-white sm:text-3xl">
+            <h1 className="text-2xl font-bold text-foreground sm:text-3xl">
               {formatFullName(user.nom, user.prenom)}
             </h1>
-            <p className="mt-1 text-white/80">{user.email}</p>
+            <p className="mt-1 text-muted">{user.email}</p>
             <div className="mt-3 flex flex-wrap justify-center gap-2 sm:justify-start">
               {roles.map((role) => (
-                <Badge
-                  key={role}
-                  variant="outline"
-                  className="border-white/40 bg-white/10 text-white"
-                >
+                <Badge key={role} variant="outline">
                   {ROLE_LABELS[role] ?? role}
                 </Badge>
               ))}
@@ -76,7 +71,7 @@ export default function ProfilePage() {
           </div>
           <Link
             href={routes.dashboard.settings}
-            className="mt-4 inline-flex items-center gap-2 rounded-lg border border-white/30 bg-white/10 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-white/20 sm:mt-0"
+            className="mt-4 inline-flex items-center gap-2 rounded-lg border border-gray-200 px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-gray-100 dark:border-gray-700 dark:hover:bg-gray-800 sm:mt-0"
           >
             <Settings className="h-4 w-4" aria-hidden />
             Paramètres
@@ -134,65 +129,7 @@ export default function ProfilePage() {
             </Card>
           )}
 
-          {activeTab === "stats" && (
-            <div className="grid gap-4 sm:grid-cols-2">
-              {hasRole(user, Role.MEDECIN) && (
-                <>
-                  <StatCard
-                    title="Consultations"
-                    value="—"
-                    subtitle="Ce mois-ci"
-                  />
-                  <StatCard
-                    title="Prescriptions"
-                    value="—"
-                    subtitle="Actives"
-                  />
-                </>
-              )}
-              {hasRole(user, Role.ASSUREUR) && (
-                <>
-                  <StatCard
-                    title="Remboursements"
-                    value="—"
-                    subtitle="En attente"
-                  />
-                  <StatCard
-                    title="Assurés actifs"
-                    value="—"
-                    subtitle="Total"
-                  />
-                </>
-              )}
-              {hasRole(user, Role.PATIENT) && (
-                <>
-                  <StatCard
-                    title="Consultations"
-                    value="—"
-                    subtitle="Total"
-                  />
-                  <StatCard
-                    title="Remboursements"
-                    value="—"
-                    subtitle="En cours"
-                  />
-                </>
-              )}
-              {hasRole(user, Role.ADMIN) && (
-                <>
-                  <StatCard title="Utilisateurs" value="—" subtitle="Actifs" />
-                  <StatCard title="Audit logs" value="—" subtitle="7 derniers jours" />
-                </>
-              )}
-              {!roles.length && (
-                <Card className="sm:col-span-2">
-                  <p className="text-center text-muted">
-                    Aucune statistique disponible pour votre profil.
-                  </p>
-                </Card>
-              )}
-            </div>
-          )}
+          {activeTab === "stats" && <ProfileStats user={user} />}
         </div>
       </div>
     </div>

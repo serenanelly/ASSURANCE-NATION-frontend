@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ChevronRight, Home } from "lucide-react";
+import { ChevronRight, Home } from "@/components/icons";
 import { cn } from "@/utils/cn";
 
 export interface BreadcrumbItem {

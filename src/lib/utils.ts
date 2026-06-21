@@ -3,8 +3,11 @@ import type { User } from "@/types/user";
 
 export function normalizeRoles(roles: Set<Role> | Role[] | string[] | undefined): Role[] {
   if (!roles) return [];
-  if (roles instanceof Set) return Array.from(roles) as Role[];
-  return roles as Role[];
+  const arr = roles instanceof Set ? Array.from(roles) : roles;
+  // Backend sends Spring authorities prefixed with "ROLE_" (e.g. "ROLE_ADMIN");
+  // the frontend Role enum uses bare names ("ADMIN"). Strip the prefix so role
+  // and permission checks match. Bare values pass through unchanged.
+  return arr.map((role) => String(role).replace(/^ROLE_/, "")) as Role[];
 }
 
 export function hasRole(user: User | null | undefined, role: Role): boolean {

@@ -8,12 +8,12 @@ import {
   Stethoscope,
   User,
   Wallet,
-} from "lucide-react";
+} from "@/components/icons";
 import { usePermissions } from "@/hooks/usePermissions";
 import { routes } from "@/config/routes";
 import { ROUTE_PERMISSIONS, type Permission } from "@/config/permissions";
 import { cn } from "@/utils/cn";
-import type { LucideIcon } from "lucide-react";
+import type { LucideIcon } from "@/components/icons";
 
 interface MobileNavItem {
   label: string;

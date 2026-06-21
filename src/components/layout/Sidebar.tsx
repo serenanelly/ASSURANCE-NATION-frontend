@@ -1,9 +1,12 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   BarChart3,
+  ChevronLeft,
+  ChevronRight,
   FileHeart,
   LayoutDashboard,
   LogOut,
@@ -14,7 +17,7 @@ import {
   UserRound,
   Users,
   Wallet,
-} from "lucide-react";
+} from "@/components/icons";
 import { Logo } from "@/components/common/Logo";
 import { useAuth } from "@/context/AuthContext";
 import { usePermissions } from "@/hooks/usePermissions";
@@ -23,7 +26,7 @@ import { ROUTE_PERMISSIONS, type Permission } from "@/config/permissions";
 import { formatFullName } from "@/lib/formatters";
 import { getInitials } from "@/lib/utils";
 import { cn } from "@/utils/cn";
-import type { LucideIcon } from "lucide-react";
+import type { LucideIcon } from "@/components/icons";
 
 interface NavItem {
   label: string;
@@ -99,6 +102,22 @@ export function Sidebar() {
   const pathname = usePathname();
   const { user, logout } = useAuth();
   const { hasAnyPermission } = usePermissions();
+  const [collapsed, setCollapsed] = useState(false);
+
+  useEffect(() => {
+    const stored = localStorage.getItem("sidebar-collapsed");
+    if (stored !== null) setCollapsed(stored === "true");
+  }, []);
+
+  const toggleCollapsed = () => {
+    setCollapsed((prev) => {
+      const next = !prev;
+      if (typeof window !== "undefined") {
+        localStorage.setItem("sidebar-collapsed", String(next));
+      }
+      return next;
+    });
+  };
 
   const visibleItems = NAV_ITEMS.filter((item) => {
     if (!item.permissions || item.permissions.length === 0) return true;
@@ -113,9 +132,31 @@ export function Sidebar() {
   };
 
   return (
-    <aside className="hidden h-screen w-[260px] shrink-0 flex-col bg-navy text-white lg:flex">
-      <div className="border-b border-white/10 px-6 py-5">
-        <Logo href={routes.dashboard.root} size="md" variant="white" />
+    <aside
+      className={cn(
+        "hidden h-screen shrink-0 flex-col bg-card text-foreground transition-[width] duration-200 lg:flex",
+        collapsed ? "w-[76px]" : "w-[260px]"
+      )}
+    >
+      <div
+        className={cn(
+          "flex items-center py-5",
+          collapsed ? "justify-center px-3" : "justify-between px-6"
+        )}
+      >
+        {!collapsed && <Logo href={routes.dashboard.root} size="md" />}
+        <button
+          type="button"
+          onClick={toggleCollapsed}
+          className="rounded-lg p-2 text-muted transition-colors hover:bg-gray-100 hover:text-foreground dark:hover:bg-gray-800"
+          aria-label={collapsed ? "Déplier le menu" : "Replier le menu"}
+        >
+          {collapsed ? (
+            <ChevronRight className="h-5 w-5" aria-hidden />
+          ) : (
+            <ChevronLeft className="h-5 w-5" aria-hidden />
+          )}
+        </button>
       </div>
 
       <nav className="flex-1 space-y-1 overflow-y-auto px-3 py-4" aria-label="Navigation principale">
@@ -126,45 +167,66 @@ export function Sidebar() {
             <Link
               key={item.href}
               href={item.href}
+              title={collapsed ? item.label : undefined}
               className={cn(
-                "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
+                "flex items-center rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
+                collapsed ? "justify-center" : "gap-3",
                 active
-                  ? "bg-white/15 text-white"
-                  : "text-white/70 hover:bg-white/10 hover:text-white"
+                  ? "bg-gray-100 text-primary dark:bg-gray-800"
+                  : "text-muted hover:bg-gray-100 hover:text-foreground dark:hover:bg-gray-800"
               )}
               aria-current={active ? "page" : undefined}
             >
               <Icon className="h-5 w-5 shrink-0" aria-hidden />
-              {item.label}
+              {!collapsed && item.label}
             </Link>
           );
         })}
       </nav>
 
       {user && (
-        <div className="border-t border-white/10 p-4">
-          <div className="flex items-center gap-3 rounded-lg bg-white/10 p-3">
-            <div
-              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary text-sm font-semibold text-white"
-              aria-hidden
-            >
-              {getInitials(user.nom, user.prenom)}
+        <div className="p-3">
+          {collapsed ? (
+            <div className="flex flex-col items-center gap-2">
+              <div
+                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary text-sm font-semibold text-white"
+                aria-hidden
+              >
+                {getInitials(user.nom, user.prenom)}
+              </div>
+              <button
+                type="button"
+                onClick={() => logout()}
+                className="rounded-lg p-2 text-muted transition-colors hover:bg-gray-100 hover:text-foreground dark:hover:bg-gray-800"
+                aria-label="Se déconnecter"
+              >
+                <LogOut className="h-4 w-4" aria-hidden />
+              </button>
             </div>
-            <div className="min-w-0 flex-1">
-              <p className="truncate text-sm font-semibold">
-                {formatFullName(user.nom, user.prenom)}
-              </p>
-              <p className="truncate text-xs text-white/60">{user.email}</p>
+          ) : (
+            <div className="flex items-center gap-3 rounded-lg bg-gray-100 p-3 dark:bg-gray-800">
+              <div
+                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary text-sm font-semibold text-white"
+                aria-hidden
+              >
+                {getInitials(user.nom, user.prenom)}
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className="truncate text-sm font-semibold">
+                  {formatFullName(user.nom, user.prenom)}
+                </p>
+                <p className="truncate text-xs text-muted">{user.email}</p>
+              </div>
+              <button
+                type="button"
+                onClick={() => logout()}
+                className="rounded-lg p-2 text-muted transition-colors hover:bg-gray-100 hover:text-foreground dark:hover:bg-gray-800"
+                aria-label="Se déconnecter"
+              >
+                <LogOut className="h-4 w-4" aria-hidden />
+              </button>
             </div>
-            <button
-              type="button"
-              onClick={() => logout()}
-              className="rounded-lg p-2 text-white/70 transition-colors hover:bg-white/10 hover:text-white"
-              aria-label="Se déconnecter"
-            >
-              <LogOut className="h-4 w-4" aria-hidden />
-            </button>
-          </div>
+          )}
         </div>
       )}
     </aside>

@@ -25,3 +25,11 @@
     text-wrap: balance;
   }
 }
+
+/* Remove all shadows across the app (design request). Overrides Tailwind
+   shadow-* utilities and any token-based box-shadows. */
+*,
+*::before,
+*::after {
+  box-shadow: none !important;
+}

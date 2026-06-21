@@ -1,7 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { TrendingUp, Clock, CheckCircle, XCircle, Wallet } from "lucide-react";
+import { TrendingUp, Clock, CheckCircle, XCircle, Wallet } from "@/components/icons";
 import { Header } from "@/components/common/Header";
 import { StatCard } from "@/components/dashboard/StatCard";
 import { ReimbursementChart } from "@/components/dashboard/ReimbursementChart";

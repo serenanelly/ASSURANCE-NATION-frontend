@@ -3,7 +3,7 @@
 import { useState, useMemo } from "react";
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
-import { Plus, X } from "lucide-react";
+import { Plus, X } from "@/components/icons";
 import { Header } from "@/components/common/Header";
 import { Button } from "@/components/common/Button";
 import { Input } from "@/components/common/Input";

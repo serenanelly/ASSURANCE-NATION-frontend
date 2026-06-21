@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "@tanstack/react-query";
-import { Search } from "lucide-react";
+import { Search } from "@/components/icons";
 import api from "@/lib/api";
 import { apiConfig } from "@/config/api";
 import { Button } from "@/components/common/Button";

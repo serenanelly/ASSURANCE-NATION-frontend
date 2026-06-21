@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Eye, Pencil } from "lucide-react";
+import { Eye, Pencil } from "@/components/icons";
 import { Table, type TableColumn } from "@/components/common/Table";
 import { Badge } from "@/components/common/Badge";
 import type { TablePageable } from "@/components/common/Table";

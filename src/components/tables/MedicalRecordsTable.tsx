@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Eye } from "lucide-react";
+import { Eye } from "@/components/icons";
 import { Table, type TableColumn } from "@/components/common/Table";
 import { Badge } from "@/components/common/Badge";
 import { formatCurrency, formatDate } from "@/lib/formatters";

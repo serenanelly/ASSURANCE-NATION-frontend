@@ -9,7 +9,7 @@ import {
   Stethoscope,
   TrendingUp,
   Users,
-} from "lucide-react";
+} from "@/components/icons";
 import { Header } from "@/components/common/Header";
 import { StatCard } from "@/components/dashboard/StatCard";
 import { ReimbursementChart } from "@/components/dashboard/ReimbursementChart";

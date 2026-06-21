@@ -74,7 +74,7 @@
     "dosage": "Posologie",
     "duration": "Durée (jours)",
     "medicalRecordId": "ID feuille de maladie",
-    "amount": "Montant (€)",
+    "amount": "Montant (FCFA)",
     "paymentMethod": "Mode de paiement",
     "bankTransfer": "Virement",
     "cash": "Espèces",

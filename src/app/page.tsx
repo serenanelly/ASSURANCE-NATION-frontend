@@ -8,7 +8,7 @@ import {
   Stethoscope,
   Users,
   Wallet,
-} from "lucide-react";
+} from "@/components/icons";
 import { PublicLayout } from "@/components/layout/PublicLayout";
 import { Button } from "@/components/common/Button";
 import { routes } from "@/config/routes";
@@ -129,7 +129,7 @@ export default function HomePage() {
                 key={feature.title}
                 className="rounded-xl border border-gray-200 bg-card p-6 shadow-sm transition-shadow hover:shadow-md dark:border-gray-700"
               >
-                <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                <div className="text-primary">
                   <feature.icon className="h-6 w-6" aria-hidden />
                 </div>
                 <h3 className="mt-4 text-lg font-semibold text-foreground">

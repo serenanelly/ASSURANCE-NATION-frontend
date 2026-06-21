@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { ChevronDown, Globe } from "lucide-react";
+import { ChevronDown, Globe } from "@/components/icons";
 import { cn } from "@/utils/cn";
 import { useLocale } from "next-intl";
 

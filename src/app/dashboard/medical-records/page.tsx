@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Search } from "lucide-react";
+import { Search } from "@/components/icons";
 import { Header } from "@/components/common/Header";
 import { Input } from "@/components/common/Input";
 import { Button } from "@/components/common/Button";

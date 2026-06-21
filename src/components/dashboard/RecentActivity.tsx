@@ -6,7 +6,7 @@ import {
   FileText,
   Receipt,
   Stethoscope,
-} from "lucide-react";
+} from "@/components/icons";
 import { Card } from "@/components/common/Card";
 import { Badge } from "@/components/common/Badge";
 import {
@@ -86,7 +86,7 @@ export function RecentActivity({ items, isLoading }: RecentActivityProps) {
             const Icon = iconMap[item.type] ?? Calendar;
             const content = (
               <div className="flex items-start gap-3 py-3">
-                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                <div className="shrink-0 text-primary">
                   <Icon className="h-4 w-4" />
                 </div>
                 <div className="min-w-0 flex-1">

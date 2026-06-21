@@ -1,4 +1,4 @@
-import { format, formatDistanceToNow, parseISO } from "date-fns";
+import { format, formatDistanceToNow, isValid, parseISO } from "date-fns";
 import { fr } from "date-fns/locale";
 import {
   PrescriptionType,
@@ -7,12 +7,23 @@ import {
   TypeConsultation,
 } from "@/types/enums";
 
+/**
+ * Coerce an incoming value to a valid Date, or null if it can't be parsed.
+ * Guards against `RangeError: Invalid time value` thrown by date-fns `format`
+ * when the backend returns an empty/unexpected date string.
+ */
+function toValidDate(value: string | Date | undefined | null): Date | null {
+  if (!value) return null;
+  const date = typeof value === "string" ? parseISO(value) : value;
+  return isValid(date) ? date : null;
+}
+
 export function formatDate(
   value: string | Date | undefined | null,
   pattern = "dd/MM/yyyy"
 ): string {
-  if (!value) return "—";
-  const date = typeof value === "string" ? parseISO(value) : value;
+  const date = toValidDate(value);
+  if (!date) return "—";
   return format(date, pattern, { locale: fr });
 }
 
@@ -20,26 +31,27 @@ export function formatDateTime(
   value: string | Date | undefined | null,
   pattern = "dd/MM/yyyy HH:mm"
 ): string {
-  if (!value) return "—";
-  const date = typeof value === "string" ? parseISO(value) : value;
+  const date = toValidDate(value);
+  if (!date) return "—";
   return format(date, pattern, { locale: fr });
 }
 
 export function formatRelativeDate(value: string | Date | undefined | null): string {
-  if (!value) return "—";
-  const date = typeof value === "string" ? parseISO(value) : value;
+  const date = toValidDate(value);
+  if (!date) return "—";
   return formatDistanceToNow(date, { addSuffix: true, locale: fr });
 }
 
 export function formatCurrency(
   value: number | undefined | null,
-  currency = "EUR"
+  currency = "FCFA"
 ): string {
   if (value === undefined || value === null) return "—";
-  return new Intl.NumberFormat("fr-FR", {
-    style: "currency",
-    currency,
+  // FCFA (franc CFA) has no decimal subunit; show grouped integer amounts.
+  const formatted = new Intl.NumberFormat("fr-FR", {
+    maximumFractionDigits: 0,
   }).format(value);
+  return `${formatted} ${currency}`;
 }
 
 export function formatPercent(value: number | undefined | null): string {

@@ -7,7 +7,7 @@ import {
   useMemo,
   useState,
 } from "react";
-import { X, CheckCircle2, AlertCircle, Info, AlertTriangle } from "lucide-react";
+import { X, CheckCircle2, AlertCircle, Info, AlertTriangle } from "@/components/icons";
 import { cn } from "@/utils/cn";
 import { siteConfig } from "@/config/site";
 
