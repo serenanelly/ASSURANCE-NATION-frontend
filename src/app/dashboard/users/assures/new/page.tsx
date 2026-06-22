@@ -21,7 +21,17 @@ export default function NewAssurePage() {
 
   const mutation = useMutation({
     mutationFn: async (values: RegisterAssureFormValues) => {
-      const payload: RegisterAssureRequest = values;
+      // confirmPassword is client-side only — the backend DTO rejects unknown fields.
+      const payload: RegisterAssureRequest = {
+        email: values.email,
+        password: values.password,
+        nom: values.nom,
+        prenom: values.prenom,
+        numSecuriteSociale: values.numSecuriteSociale,
+        dateAffiliation: values.dateAffiliation,
+        emploi: values.emploi,
+        medecinTraitantId: values.medecinTraitantId || undefined,
+      };
       const { data } = await api.post<Assure>(apiConfig.endpoints.assures, payload);
       return data;
     },
@@ -51,7 +61,9 @@ export default function NewAssurePage() {
           <UserForm
             variant="assure"
             mode="create"
-            onSubmit={(data) => mutation.mutateAsync(data as RegisterAssureFormValues)}
+            onSubmit={(data) =>
+              mutation.mutateAsync(data as RegisterAssureFormValues).catch(() => {})
+            }
             isSubmitting={mutation.isPending}
           />
         </Card>

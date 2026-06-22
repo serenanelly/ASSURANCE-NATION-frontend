@@ -21,8 +21,15 @@ export default function NewMedecinPage() {
 
   const mutation = useMutation({
     mutationFn: async (values: RegisterMedecinFormValues) => {
+      // confirmPassword is client-side only — the backend DTO rejects unknown fields.
       const payload: RegisterMedecinRequest = {
-        ...values,
+        email: values.email,
+        password: values.password,
+        nom: values.nom,
+        prenom: values.prenom,
+        numeroRPPS: values.numeroRPPS,
+        specialite: values.specialite,
+        telephone: values.telephone,
         estAssure: values.estAssure ?? false,
       };
       const { data } = await api.post<Medecin>(apiConfig.endpoints.medecins, payload);
@@ -54,7 +61,9 @@ export default function NewMedecinPage() {
           <UserForm
             variant="medecin"
             mode="create"
-            onSubmit={(data) => mutation.mutateAsync(data as RegisterMedecinFormValues)}
+            onSubmit={(data) =>
+              mutation.mutateAsync(data as RegisterMedecinFormValues).catch(() => {})
+            }
             isSubmitting={mutation.isPending}
           />
         </Card>

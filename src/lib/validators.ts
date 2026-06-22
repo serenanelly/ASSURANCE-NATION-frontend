@@ -147,7 +147,9 @@ export const registerAssureSchema = z
     confirmPassword: z.string().min(1, "La confirmation est requise"),
     nom: z.string().min(1, "Le nom est requis"),
     prenom: z.string().min(1, "Le prénom est requis"),
-    numSecuriteSociale: z.string().min(1, "Le numéro de sécurité sociale est requis"),
+    numSecuriteSociale: z
+      .string()
+      .regex(/^\d{15}$/, "Le numéro de sécurité sociale doit contenir exactement 15 chiffres"),
     dateAffiliation: z.string().optional(),
     emploi: z.string().optional(),
     medecinTraitantId: z.string().uuid().optional(),
@@ -164,7 +166,9 @@ export const registerMedecinSchema = z
     confirmPassword: z.string().min(1, "La confirmation est requise"),
     nom: z.string().min(1, "Le nom est requis"),
     prenom: z.string().min(1, "Le prénom est requis"),
-    numeroRPPS: z.string().min(1, "Le numéro RPPS est requis"),
+    numeroRPPS: z
+      .string()
+      .regex(/^\d{11}$/, "Le numéro RPPS doit contenir exactement 11 chiffres"),
     specialite: z.nativeEnum(Specialite, { message: "Spécialité invalide" }),
     telephone: z.string().optional(),
     estAssure: z.boolean().optional(),
