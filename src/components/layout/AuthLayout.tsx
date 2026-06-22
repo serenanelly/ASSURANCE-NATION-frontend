@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { Logo } from "@/components/common/Logo";
 import { ThemeToggle } from "@/components/common/ThemeToggle";
 import { cn } from "@/utils/cn";
@@ -18,31 +19,59 @@ export function AuthLayout({
   className,
 }: AuthLayoutProps) {
   return (
-    <div className="relative min-h-screen bg-gradient-to-br from-navy via-primary-dark to-primary">
-      <div className="absolute right-4 top-4 z-10 md:right-8 md:top-8">
-        <ThemeToggle className="border-white/30 bg-white/10 text-white hover:bg-white/20 dark:border-white/30" />
+    <div className="flex min-h-screen gap-4 bg-background p-4 lg:h-screen lg:overflow-hidden">
+      {/* Left — image panel */}
+      <div className="relative hidden w-1/2 shrink-0 overflow-hidden rounded-3xl lg:block">
+        <Image
+          src="/bg-login.jpg"
+          alt=""
+          fill
+          priority
+          sizes="50vw"
+          className="object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-black/45" />
+
+        <div className="absolute inset-0 flex flex-col justify-between p-10">
+          <Logo href="/" size="md" variant="white" />
+
+          <div>
+            <h2 className="max-w-md text-3xl font-bold leading-tight text-white">
+              La gestion santé, simplifiée.
+            </h2>
+            <p className="mt-3 max-w-sm text-sm text-white/80">
+              Consultations, prescriptions et remboursements réunis dans une
+              plateforme sécurisée pour médecins, assureurs et patients.
+            </p>
+          </div>
+        </div>
       </div>
 
-      <div className="flex min-h-screen flex-col items-center justify-center px-4 py-12">
-        <Logo href="/" size="lg" variant="white" className="mb-8" />
+      {/* Right — form panel */}
+      <div className="flex w-full flex-col lg:w-1/2 lg:overflow-y-auto">
+        <div className="flex items-center justify-between px-2 py-2">
+          <Logo href="/" size="md" className="lg:hidden" />
+          <div className="ml-auto">
+            <ThemeToggle />
+          </div>
+        </div>
 
-        <div
-          className={cn(
-            "w-full max-w-md rounded-xl border border-white/20 bg-white p-6 shadow-lg dark:border-gray-700 dark:bg-gray-900 sm:p-8",
-            className
-          )}
-        >
-          {(title || subtitle) && (
-            <div className="mb-6 text-center">
-              {title && (
-                <h1 className="text-2xl font-bold text-foreground">{title}</h1>
-              )}
-              {subtitle && (
-                <p className="mt-2 text-sm text-muted">{subtitle}</p>
-              )}
-            </div>
-          )}
-          {children}
+        <div className="flex flex-1 items-center justify-center px-4 py-8 sm:px-8">
+          <div className={cn("w-full max-w-md", className)}>
+            {(title || subtitle) && (
+              <div className="mb-8 text-center">
+                {title && (
+                  <h1 className="text-3xl font-bold text-foreground sm:text-4xl">
+                    {title}
+                  </h1>
+                )}
+                {subtitle && (
+                  <p className="mt-3 text-muted">{subtitle}</p>
+                )}
+              </div>
+            )}
+            {children}
+          </div>
         </div>
       </div>
     </div>

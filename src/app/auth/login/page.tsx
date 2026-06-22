@@ -9,8 +9,8 @@ export const metadata: Metadata = {
 export default function LoginPage() {
   return (
     <AuthLayout
-      title="Connexion"
-      subtitle="Accédez à votre espace ASSURANCE NATION"
+      title="Bienvenue"
+      subtitle="Connectez-vous à votre espace ASSURANCE NATION"
     >
       <LoginForm />
     </AuthLayout>
