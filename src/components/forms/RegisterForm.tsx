@@ -32,6 +32,7 @@ import { cn } from "@/utils/cn";
 const extendedRegisterSchema = registerSchema
   .extend({
     specialite: z.string().optional(),
+    specialiteLibelle: z.string().optional(),
     emploi: z.string().optional(),
     dateAffiliation: z.string().optional(),
   })
@@ -49,6 +50,16 @@ const extendedRegisterSchema = registerSchema
           code: z.ZodIssueCode.custom,
           message: "La spécialité est requise",
           path: ["specialite"],
+        });
+      }
+      if (
+        data.specialite === Specialite.SPECIALISTE &&
+        !data.specialiteLibelle?.trim()
+      ) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Précisez la spécialité",
+          path: ["specialiteLibelle"],
         });
       }
     }
@@ -114,6 +125,7 @@ export function RegisterForm() {
       userType: UserType.ASSURE,
       numeroRPPS: "",
       specialite: "",
+      specialiteLibelle: "",
       numSecuriteSociale: "",
       emploi: "",
       dateAffiliation: "",
@@ -121,6 +133,7 @@ export function RegisterForm() {
   });
 
   const userType = watch("userType");
+  const specialite = watch("specialite");
 
   const handleNext = async () => {
     if (step === 1) {
@@ -165,6 +178,7 @@ export function RegisterForm() {
     if (data.userType === UserType.MEDECIN) {
       payload.numeroRPPS = data.numeroRPPS;
       payload.specialite = data.specialite;
+      payload.specialiteLibelle = data.specialiteLibelle;
     }
 
     if (data.userType === UserType.ASSURE) {
@@ -367,6 +381,14 @@ export function RegisterForm() {
                 error={errors.specialite?.message}
                 {...register("specialite")}
               />
+              {specialite === Specialite.SPECIALISTE && (
+                <Input
+                  label="Spécialité (précisez)"
+                  placeholder="Ex. Cardiologie"
+                  error={errors.specialiteLibelle?.message}
+                  {...register("specialiteLibelle")}
+                />
+              )}
             </>
           )}
 

@@ -19,6 +19,7 @@ export interface RegisterRequest {
   userType: string;
   numeroRPPS?: string;
   specialite?: string;
+  specialiteLibelle?: string;
   numSecuriteSociale?: string;
   dateAffiliation?: string;
   emploi?: string;

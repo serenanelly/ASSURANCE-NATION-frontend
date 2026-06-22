@@ -33,6 +33,7 @@ export interface Medecin {
   prenom: string;
   numeroRPPS: string;
   specialite: Specialite;
+  specialiteLibelle?: string;
   estAssure: boolean;
 }
 
@@ -55,6 +56,7 @@ export interface RegisterMedecinRequest {
   prenom: string;
   numeroRPPS: string;
   specialite: Specialite;
+  specialiteLibelle?: string;
   telephone?: string;
   estAssure?: boolean;
 }

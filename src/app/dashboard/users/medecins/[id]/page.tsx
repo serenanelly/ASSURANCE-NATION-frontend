@@ -39,6 +39,7 @@ export default function MedecinDetailPage() {
       prenom: string;
       telephone?: string;
       specialite: Specialite;
+      specialiteLibelle?: string;
       estAssure?: boolean;
     }) => {
       const { data } = await api.put<Medecin>(
@@ -97,8 +98,11 @@ export default function MedecinDetailPage() {
             </div>
             <div>
               <dt className="text-sm text-muted">Spécialité</dt>
-              <dd>
+              <dd className="flex items-center gap-2">
                 <Badge variant="primary">{formatSpecialite(medecin.specialite)}</Badge>
+                {medecin.specialiteLibelle && (
+                  <span className="text-sm text-foreground">{medecin.specialiteLibelle}</span>
+                )}
               </dd>
             </div>
             <div>
@@ -120,6 +124,7 @@ export default function MedecinDetailPage() {
               prenom: medecin.prenom,
               numeroRPPS: medecin.numeroRPPS,
               specialite: medecin.specialite,
+              specialiteLibelle: medecin.specialiteLibelle,
               estAssure: medecin.estAssure,
             }}
             onSubmit={async (data) => {
@@ -128,6 +133,7 @@ export default function MedecinDetailPage() {
                 prenom: data.prenom,
                 telephone: data.telephone,
                 specialite: data.specialite as Specialite,
+                specialiteLibelle: data.specialiteLibelle,
                 estAssure: data.estAssure,
               });
             }}

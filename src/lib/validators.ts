@@ -170,12 +170,22 @@ export const registerMedecinSchema = z
       .string()
       .regex(/^\d{11}$/, "Le numéro RPPS doit contenir exactement 11 chiffres"),
     specialite: z.nativeEnum(Specialite, { message: "Spécialité invalide" }),
+    specialiteLibelle: z.string().optional(),
     telephone: z.string().optional(),
     estAssure: z.boolean().optional(),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Les mots de passe ne correspondent pas",
     path: ["confirmPassword"],
+  })
+  .superRefine((data, ctx) => {
+    if (data.specialite === Specialite.SPECIALISTE && !data.specialiteLibelle?.trim()) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Précisez la spécialité",
+        path: ["specialiteLibelle"],
+      });
+    }
   });
 
 export const medicalRecordUpdateSchema = z.object({
@@ -189,14 +199,25 @@ export const assureUpdateSchema = z.object({
   emploi: z.string().optional(),
 });
 
-export const medecinUpdateSchema = z.object({
-  nom: z.string().min(1, "Le nom est requis"),
-  prenom: z.string().min(1, "Le prénom est requis"),
-  numeroRPPS: z.string().optional(),
-  specialite: z.nativeEnum(Specialite, { message: "Spécialité invalide" }),
-  telephone: z.string().optional(),
-  estAssure: z.boolean().optional(),
-});
+export const medecinUpdateSchema = z
+  .object({
+    nom: z.string().min(1, "Le nom est requis"),
+    prenom: z.string().min(1, "Le prénom est requis"),
+    numeroRPPS: z.string().optional(),
+    specialite: z.nativeEnum(Specialite, { message: "Spécialité invalide" }),
+    specialiteLibelle: z.string().optional(),
+    telephone: z.string().optional(),
+    estAssure: z.boolean().optional(),
+  })
+  .superRefine((data, ctx) => {
+    if (data.specialite === Specialite.SPECIALISTE && !data.specialiteLibelle?.trim()) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Précisez la spécialité",
+        path: ["specialiteLibelle"],
+      });
+    }
+  });
 
 export type RegisterAssureFormValues = z.infer<typeof registerAssureSchema>;
 export type RegisterMedecinFormValues = z.infer<typeof registerMedecinSchema>;

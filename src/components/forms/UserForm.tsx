@@ -169,11 +169,14 @@ function MedecinCreateForm({
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors },
   } = useForm<RegisterMedecinFormValues>({
     resolver: zodResolver(registerMedecinSchema),
     defaultValues: { estAssure: false, ...defaultValues },
   });
+
+  const specialite = watch("specialite");
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
@@ -192,6 +195,14 @@ function MedecinCreateForm({
         error={errors.specialite?.message}
         {...register("specialite")}
       />
+      {specialite === Specialite.SPECIALISTE && (
+        <Input
+          label="Spécialité (précisez)"
+          placeholder="Ex. Cardiologie"
+          error={errors.specialiteLibelle?.message}
+          {...register("specialiteLibelle")}
+        />
+      )}
       <Input label="Téléphone" error={errors.telephone?.message} {...register("telephone")} />
       <label className="flex items-center gap-2 text-sm">
         <input type="checkbox" {...register("estAssure")} className="rounded border-gray-300" />
@@ -216,11 +227,14 @@ function MedecinEditForm({
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors },
   } = useForm<MedecinUpdateFormValues>({
     resolver: zodResolver(medecinUpdateSchema),
     defaultValues,
   });
+
+  const specialite = watch("specialite");
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
@@ -236,6 +250,14 @@ function MedecinEditForm({
         error={errors.specialite?.message}
         {...register("specialite")}
       />
+      {specialite === Specialite.SPECIALISTE && (
+        <Input
+          label="Spécialité (précisez)"
+          placeholder="Ex. Cardiologie"
+          error={errors.specialiteLibelle?.message}
+          {...register("specialiteLibelle")}
+        />
+      )}
       <Input label="Téléphone" error={errors.telephone?.message} {...register("telephone")} />
       <label className="flex items-center gap-2 text-sm">
         <input type="checkbox" {...register("estAssure")} className="rounded border-gray-300" />

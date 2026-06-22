@@ -29,6 +29,7 @@ export default function NewMedecinPage() {
         prenom: values.prenom,
         numeroRPPS: values.numeroRPPS,
         specialite: values.specialite,
+        specialiteLibelle: values.specialiteLibelle,
         telephone: values.telephone,
         estAssure: values.estAssure ?? false,
       };
