@@ -90,16 +90,6 @@ export function LoginForm() {
       <Button type="submit" fullWidth isLoading={isLoading}>
         Se connecter
       </Button>
-
-      <p className="text-center text-sm text-muted">
-        Pas encore de compte ?{" "}
-        <Link
-          href={routes.auth.register}
-          className="font-semibold text-primary hover:text-navy dark:hover:text-primary-light"
-        >
-          Créer un compte
-        </Link>
-      </p>
     </form>
   );
 }

@@ -5,6 +5,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/common/Button";
 import { Input } from "@/components/common/Input";
 import { Select } from "@/components/common/Select";
+import { ImageUpload } from "@/components/common/ImageUpload";
+import { MedecinSelect } from "@/components/forms/MedecinSelect";
+import { getInitials } from "@/lib/utils";
 import {
   registerAssureSchema,
   registerMedecinSchema,
@@ -103,6 +106,8 @@ function AssureCreateForm({
   const {
     register,
     handleSubmit,
+    watch,
+    setValue,
     formState: { errors },
   } = useForm<RegisterAssureFormValues>({
     resolver: zodResolver(registerAssureSchema),
@@ -111,6 +116,11 @@ function AssureCreateForm({
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+      <ImageUpload
+        value={watch("photoUrl")}
+        onChange={(v) => setValue("photoUrl", v)}
+        initials={getInitials(watch("nom") || "", watch("prenom") || "")}
+      />
       <Input label="Email" type="email" error={errors.email?.message} {...register("email")} />
       <Input label="Mot de passe" type="password" hint={PASSWORD_HINT} error={errors.password?.message} {...register("password")} />
       <Input label="Confirmer le mot de passe" type="password" error={errors.confirmPassword?.message} {...register("confirmPassword")} />
@@ -119,7 +129,11 @@ function AssureCreateForm({
       <Input label="Prénom" error={errors.prenom?.message} {...register("prenom")} />
       <Input label="Emploi" error={errors.emploi?.message} {...register("emploi")} />
       <Input label="Date d&apos;affiliation" type="date" error={errors.dateAffiliation?.message} {...register("dateAffiliation")} />
-      <Input label="Médecin traitant (ID)" error={errors.medecinTraitantId?.message} {...register("medecinTraitantId")} />
+      <MedecinSelect
+        value={watch("medecinTraitantId")}
+        onChange={(id) => setValue("medecinTraitantId", id, { shouldValidate: true })}
+        error={errors.medecinTraitantId?.message}
+      />
       <Button type="submit" isLoading={isSubmitting} fullWidth>
         Créer l&apos;assuré
       </Button>
@@ -139,6 +153,8 @@ function AssureEditForm({
   const {
     register,
     handleSubmit,
+    watch,
+    setValue,
     formState: { errors },
   } = useForm<AssureUpdateFormValues>({
     resolver: zodResolver(assureUpdateSchema),
@@ -147,6 +163,11 @@ function AssureEditForm({
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+      <ImageUpload
+        value={watch("photoUrl")}
+        onChange={(v) => setValue("photoUrl", v)}
+        initials={getInitials(watch("nom") || "", watch("prenom") || "")}
+      />
       <Input label="Nom" error={errors.nom?.message} {...register("nom")} />
       <Input label="Prénom" error={errors.prenom?.message} {...register("prenom")} />
       <Input label="Emploi" error={errors.emploi?.message} {...register("emploi")} />
@@ -170,6 +191,7 @@ function MedecinCreateForm({
     register,
     handleSubmit,
     watch,
+    setValue,
     formState: { errors },
   } = useForm<RegisterMedecinFormValues>({
     resolver: zodResolver(registerMedecinSchema),
@@ -180,6 +202,11 @@ function MedecinCreateForm({
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+      <ImageUpload
+        value={watch("photoUrl")}
+        onChange={(v) => setValue("photoUrl", v)}
+        initials={getInitials(watch("nom") || "", watch("prenom") || "")}
+      />
       <Input label="Email" type="email" error={errors.email?.message} {...register("email")} />
       <Input label="Mot de passe" type="password" hint={PASSWORD_HINT} error={errors.password?.message} {...register("password")} />
       <Input label="Confirmer le mot de passe" type="password" error={errors.confirmPassword?.message} {...register("confirmPassword")} />
@@ -228,6 +255,7 @@ function MedecinEditForm({
     register,
     handleSubmit,
     watch,
+    setValue,
     formState: { errors },
   } = useForm<MedecinUpdateFormValues>({
     resolver: zodResolver(medecinUpdateSchema),
@@ -238,6 +266,11 @@ function MedecinEditForm({
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+      <ImageUpload
+        value={watch("photoUrl")}
+        onChange={(v) => setValue("photoUrl", v)}
+        initials={getInitials(watch("nom") || "", watch("prenom") || "")}
+      />
       <Input label="Nom" error={errors.nom?.message} {...register("nom")} />
       <Input label="Prénom" error={errors.prenom?.message} {...register("prenom")} />
       <Input label="N° RPPS" error={errors.numeroRPPS?.message} {...register("numeroRPPS")} />

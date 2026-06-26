@@ -11,6 +11,7 @@ import {
   Settings,
   User,
 } from "@/components/icons";
+import { Avatar } from "@/components/common/Avatar";
 import { ThemeToggle } from "@/components/common/ThemeToggle";
 import { useAuth } from "@/context/AuthContext";
 import { useNotification } from "@/context/NotificationContext";
@@ -122,12 +123,11 @@ export function Header() {
                 aria-expanded={menuOpen}
                 aria-haspopup="menu"
               >
-                <div
-                  className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-xs font-semibold text-white"
-                  aria-hidden
-                >
-                  {getInitials(user.nom, user.prenom)}
-                </div>
+                <Avatar
+                  photoUrl={user.photoUrl}
+                  initials={getInitials(user.nom, user.prenom)}
+                  className="h-8 w-8 text-xs"
+                />
                 <span className="hidden max-w-[120px] truncate text-sm font-medium text-foreground md:block">
                   {formatFullName(user.nom, user.prenom)}
                 </span>

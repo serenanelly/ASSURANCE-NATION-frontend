@@ -26,6 +26,10 @@ interface ConsultationFormProps {
 export function ConsultationForm({ onSubmit, isSubmitting }: ConsultationFormProps) {
   const [nssSearch, setNssSearch] = useState("");
   const [selectedAssure, setSelectedAssure] = useState<Assure | null>(null);
+  const [searchError, setSearchError] = useState<string | null>(null);
+
+  // Le NSS s'écrit souvent avec des espaces ; le backend exige 15 chiffres bruts.
+  const nssDigits = nssSearch.replace(/\D/g, "");
 
   const {
     register,
@@ -43,7 +47,7 @@ export function ConsultationForm({ onSubmit, isSubmitting }: ConsultationFormPro
     queryKey: ["assure-search", nssSearch],
     queryFn: async () => {
       const { data } = await api.get<Assure>(
-        `${apiConfig.endpoints.assures}/search${buildQueryString({ nss: nssSearch })}`
+        `${apiConfig.endpoints.assures}/search${buildQueryString({ nss: nssDigits })}`
       );
       return data;
     },
@@ -51,11 +55,18 @@ export function ConsultationForm({ onSubmit, isSubmitting }: ConsultationFormPro
   });
 
   const handleSearch = async () => {
-    if (!nssSearch.trim()) return;
+    setSearchError(null);
+    if (nssDigits.length !== 15) {
+      setSearchError("Le numéro de sécurité sociale doit comporter 15 chiffres.");
+      return;
+    }
     const result = await searchAssure();
     if (result.data) {
       setSelectedAssure(result.data);
       setValue("assureId", result.data.id, { shouldValidate: true });
+    } else {
+      setSelectedAssure(null);
+      setSearchError("Aucun assuré trouvé pour ce numéro de sécurité sociale.");
     }
   };
 
@@ -81,6 +92,7 @@ export function ConsultationForm({ onSubmit, isSubmitting }: ConsultationFormPro
             Assuré sélectionné : {selectedAssure.prenom} {selectedAssure.nom}
           </p>
         )}
+        {searchError && <p className="text-sm text-error">{searchError}</p>}
         {errors.assureId && (
           <p className="text-sm text-error">{errors.assureId.message}</p>
         )}

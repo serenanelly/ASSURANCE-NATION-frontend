@@ -1,0 +1,1103 @@
+%==============================================================================
+%  CAHIER DES CHARGES — ASSURANCE NATION
+%  ENSPY — 3GI Groupe 9 — Conception des Systemes d'Information (CSI)
+%  Compilation : pdflatex (x2) Cahier_des_Charges_ASSURANCE_NATION.tex
+%  Dependances : tikz, pgfgantt, longtable, booktabs, hyperref, fancyhdr...
+%==============================================================================
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{lmodern}
+\usepackage[a4paper,margin=2.5cm]{geometry}
+\usepackage{graphicx}
+\usepackage[table]{xcolor}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{multirow}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\usepackage{tikz}
+\usepackage{pgfgantt}
+\usepackage{caption}
+\usepackage{float}
+\usetikzlibrary{shapes.geometric,arrows.meta,positioning,fit,backgrounds}
+\usepackage[hidelinks,colorlinks=true,linkcolor=anbleu,urlcolor=anbleu,citecolor=anbleu]{hyperref}
+
+%------------------------------------------------------------------ Couleurs
+\definecolor{anbleu}{HTML}{2E3192}   % bleu institutionnel
+\definecolor{anjaune}{HTML}{FFE100}  % jaune
+\definecolor{angris}{HTML}{555555}
+\definecolor{anligne}{HTML}{2E3192}
+
+%------------------------------------------------------------------ Titres
+\titleformat{\section}
+  {\normalfont\Large\bfseries\color{anbleu}}{\thesection}{1em}{}
+\titleformat{\subsection}
+  {\normalfont\large\bfseries\color{anbleu}}{\thesubsection}{1em}{}
+\titleformat{\subsubsection}
+  {\normalfont\normalsize\bfseries\color{angris}}{\thesubsubsection}{1em}{}
+
+%------------------------------------------------------------------ En-tetes
+\pagestyle{fancy}
+\fancyhf{}
+\setlength{\headheight}{14pt}
+\fancyhead[L]{\small\itshape Cahier des Charges — ASSURANCE NATION}
+\fancyhead[R]{\small\itshape ENSPY · 3GI Groupe 9}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0pt}
+
+%------------------------------------------------------------------ Tableaux
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\renewcommand{\arraystretch}{1.25}
+
+%------------------------------------------------------------------ Exigence (boite ISO 29148)
+\newcommand{\exig}[7]{%
+\par\noindent
+\begin{tabularx}{\linewidth}{|>{\bfseries}p{3.1cm}|X|}
+\hline
+\rowcolor{anbleu!10}\multicolumn{2}{|l|}{\textbf{\color{anbleu}#1} — #2}\\\hline
+Description & #3 \\\hline
+Priorité (MoSCoW) & #4 \\\hline
+Complexité / Effort & #5 \\\hline
+Critères d'acceptation & #6 \\\hline
+Méthode de vérification & #7 \\\hline
+\end{tabularx}\par\vspace{0.6em}}
+
+\begin{document}
+
+%==============================================================================
+%  PAGE DE COUVERTURE  (sans mention de version)
+%==============================================================================
+\begin{titlepage}
+\thispagestyle{empty}
+\begin{tikzpicture}[remember picture,overlay]
+  % --- bandes decoratives ---
+  \fill[anbleu]  (current page.north west) rectangle ++(7.0,-3.6);
+  \fill[anjaune] (current page.north west) ++(0,-3.6) rectangle ++(3.4,-0.5);
+  \fill[anbleu]  (current page.south east) rectangle ++(-7.4,3.6);
+  \fill[anjaune] (current page.south west) ++(0,2.0) rectangle ++(2.6,1.2);
+
+  % --- en-tete (dans la bande bleue) ---
+  \node[anchor=north west,white,font=\bfseries\large,align=left,text width=6.4cm]
+    at ([shift={(0.5,-0.6)}]current page.north west)
+    {CONCEPTION DES\\SYSTÈMES\\D'INFORMATION};
+  \node[anchor=north west,anbleu,font=\bfseries\Large]
+    at ([shift={(0.5,-4.6)}]current page.north west) {3GI --- Groupe 9};
+
+  % --- titre central ---
+  \node[anchor=center,align=center] at ([yshift=2.2cm]current page.center) {%
+    {\color{anbleu}\fontsize{40}{44}\selectfont\bfseries CAHIER DES CHARGES}\\[0.5cm]
+    {\fontsize{22}{26}\selectfont\bfseries Plateforme \textsc{Assurance Nation}}\\[0.35cm]
+    {\large\itshape Gestion des consultations médicales et des remboursements}\\[0.15cm]
+    {\large\itshape d'un organisme de sécurité sociale}};
+
+  % --- etablissement + supervision (bas gauche, sur fond blanc) ---
+  \node[anchor=south west,align=left] at ([shift={(0.5,4.4)}]current page.south west) {%
+    {\color{anbleu}\bfseries\large ÉTABLISSEMENT}\\[0.15cm]
+    \normalsize École Nationale Supérieure Polytechnique de Yaoundé (ENSPY)\\[0.7cm]
+    {\color{anbleu}\bfseries\large SOUS LA SUPERVISION DE :}\\[0.15cm]
+    \normalsize Dr. Anne Marie CHANA\\
+    \normalsize Dr. Jaures Styve KAMENI};
+
+  % --- annee academique (bas droit, en blanc sur la bande bleue) ---
+  \node[anchor=south east,white,font=\bfseries\large,align=right]
+    at ([shift={(-0.6,0.8)}]current page.south east) {Année Académique :\\2025--2026};
+\end{tikzpicture}
+\end{titlepage}
+
+%==============================================================================
+%  TABLE DES MATIERES
+%==============================================================================
+\tableofcontents
+\thispagestyle{empty}
+\clearpage
+
+%==============================================================================
+%  PREAMBULE
+%==============================================================================
+\section*{Préambule}
+\addcontentsline{toc}{section}{Préambule}
+\markboth{Préambule}{Préambule}
+
+Le présent document constitue le \textbf{cahier des charges} de la plateforme
+logicielle \textsc{Assurance Nation}. Il est rédigé conformément aux principes
+structurels des normes \textbf{IEEE~830} et \textbf{ISO/IEC/IEEE~29148} relatives
+à l'ingénierie des exigences. Son objet est de formaliser, sans ambiguïté et de
+manière vérifiable, l'ensemble des besoins métiers, des exigences fonctionnelles
+et non-fonctionnelles, ainsi que les contraintes d'architecture, de sécurité,
+d'hébergement, de méthodologie et de cadre juridique qui régissent la conception,
+la réalisation et la livraison du système.
+
+Ce cahier des charges fait suite au \emph{Cahier d'Analyse} du projet tutoré
+(modélisation UML : diagrammes de contexte, de packages, de classes, de cas
+d'utilisation, d'activités et de séquences) et en consolide les conclusions sous
+une forme contractuelle et normée.
+
+%==============================================================================
+%  SECTION 1
+%==============================================================================
+\setcounter{section}{0}
+\section{Introduction et Contexte Stratégique}
+
+La présente section a pour fonction de \textbf{contextualiser le projet}. Les
+développeurs et architectes logiciels ne peuvent concevoir une solution optimale
+s'ils ignorent la finalité métier du système. Elle aligne donc la compréhension de
+l'ensemble des acteurs (maîtrise d'ouvrage, maîtrise d'œuvre, encadrement
+pédagogique) autour d'une vision commune.
+
+\subsection{Définition du Problème et État de l'Art}
+
+\subsubsection{Description de l'existant}
+\textsc{Assurance Nation} est destiné à un \textbf{organisme de sécurité sociale}
+qui souhaite mettre en place une application centralisée pour la gestion des
+patients (assurés), de leurs médecins traitants, des médecins spécialistes, ainsi
+que des remboursements médicaux liés aux consultations.
+
+À l'état initial, l'organisme repose sur des \textbf{processus essentiellement
+manuels et hétérogènes} :
+\begin{itemize}[leftmargin=1.4em]
+  \item l'inscription des assurés et des médecins s'effectue sur supports papier
+  ou tableurs non centralisés ;
+  \item les feuilles de maladie sont remplies à la main, puis transmises
+  physiquement entre le médecin, l'assuré et l'agent de sécurité sociale ;
+  \item le calcul des remboursements (100~\% pour une consultation chez un
+  généraliste, 80~\% chez un spécialiste) est réalisé manuellement, ce qui est
+  source d'erreurs ;
+  \item le suivi du parcours de soins (consultations, prescriptions,
+  orientations vers spécialistes) n'est pas tracé de bout en bout ;
+  \item aucune piste d'audit fiable ne permet de savoir qui a modifié quelle
+  donnée et à quel moment.
+\end{itemize}
+
+\subsubsection{Points de friction et limites}
+\begin{itemize}[leftmargin=1.4em]
+  \item \textbf{Perte de productivité} : ressaisies multiples, recherches
+  documentaires fastidieuses, délais de traitement des dossiers de remboursement.
+  \item \textbf{Taux d'erreur élevé} : erreurs de calcul des taux et montants,
+  doublons d'enregistrement, feuilles de maladie incomplètes.
+  \item \textbf{Risque de non-conformité} : absence de journalisation et de
+  protection structurée des données médicales, données à caractère personnel
+  sensibles au sens de la réglementation.
+  \item \textbf{Vulnérabilité liée à l'obsolescence} : dépendance à des supports
+  non sécurisés et non sauvegardés, risque de perte définitive d'information.
+\end{itemize}
+
+\subsubsection{Conséquences de l'inaction}
+Le maintien de l'existant exposerait l'organisme à une dégradation continue de la
+qualité de service (allongement des délais de remboursement), à un risque
+juridique croissant sur la protection des données médicales, et à une incapacité
+à passer à l'échelle face à l'augmentation du nombre d'assurés.
+
+\subsection{Objectifs Métiers et Critères de Succès}
+
+Les objectifs ci-dessous sont \textbf{stratégiques, mesurables et datés}. Ils ne
+constituent pas des fonctionnalités mais des cibles de performance (KPI) servant à
+évaluer la réussite du projet.
+
+\begin{center}
+\begin{longtable}{|L{3.0cm}|L{6.0cm}|L{4.6cm}|}
+\hline
+\rowcolor{anbleu!12}\textbf{Type d'objectif} & \textbf{Exigence structurelle} & \textbf{KPI / Cible datée}\\\hline
+\endhead
+Objectifs Financiers &
+Maîtrise du budget de mise en place (CAPEX) et des coûts opérationnels (OPEX) ;
+modèle d'hébergement à coût marginal nul en phase pilote. &
+CAPEX projet $\leq$ budget pédagogique alloué ; OPEX d'hébergement $\approx$ 0~FCFA
+(offres \emph{free tier} Vercel + base mutualisée) la première année ; ROI mesuré
+par la réduction du temps de traitement (cf. ci-dessous) sous 12 mois.\\\hline
+Objectifs Opérationnels &
+Réduction du temps de traitement, du taux d'erreur et des sollicitations support. &
+Réduction $\geq$ 70~\% du délai de constitution d'un dossier de remboursement ;
+taux d'erreur de calcul des montants ramené à 0~\% (calcul automatisé) ;
+réduction $\geq$ 50~\% des appels support à 6 mois après mise en production.\\\hline
+Objectifs Qualitatifs &
+Augmentation de la satisfaction des utilisateurs et conformité réglementaire. &
+Score de satisfaction (UAT) $\geq$ 4/5 ; conformité aux exigences de protection
+des données à caractère personnel applicables au Cameroun dès la mise en
+production ; couverture de tests du service métier $\geq$ 70~\% d'instructions.\\\hline
+\end{longtable}
+\end{center}
+
+\subsection{Glossaire et Ontologie du Projet}
+
+Le glossaire ci-dessous unifie la nomenclature métier et technique afin de
+prévenir toute barrière sémantique entre experts métiers et ingénieurs, et de
+garantir que chaque entité logicielle corresponde rigoureusement à sa réalité
+fonctionnelle.
+
+\begin{center}
+\begin{longtable}{|L{3.4cm}|L{11.0cm}|}
+\hline
+\rowcolor{anbleu!12}\textbf{Terme / Acronyme} & \textbf{Définition}\\\hline
+\endhead
+Assuré (Patient) & Personne affiliée à l'organisme, identifiée par un numéro de
+sécurité sociale (NSS) unique à 15 chiffres. Rôle applicatif : \texttt{PATIENT}.\\\hline
+Médecin & Professionnel de santé, généraliste ou spécialiste, identifié par un
+numéro RPPS unique à 11 chiffres. Rôle : \texttt{MEDECIN}.\\\hline
+Assureur & Agent de sécurité sociale, gestionnaire administratif et financier de
+l'application. Rôle : \texttt{ASSUREUR}.\\\hline
+Administrateur & Gestionnaire technique du système, accès complet. Rôle : \texttt{ADMIN}.\\\hline
+Médecin traitant & Médecin généraliste référent rattaché à un assuré.\\\hline
+Consultation & Acte médical enregistré (généraliste ou spécialiste), point de
+départ du parcours de soins.\\\hline
+Prescription & Ordonnance issue d'une consultation : médicament (\emph{MEDICAMENT})
+ou orientation vers un spécialiste (\emph{CONSULTATION\_SPECIALISTE}).\\\hline
+Feuille de maladie (Medical Record) & Document médical généré automatiquement à la
+création d'une consultation et servant de base au remboursement.\\\hline
+Remboursement (Reimbursement) & Demande de prise en charge financière, calculée à
+100~\% (généraliste) ou 80~\% (spécialiste), suivant un cycle de vie d'états.\\\hline
+Justificatif & Document PDF attestant d'un remboursement.\\\hline
+NSS & Numéro de Sécurité Sociale (15 chiffres).\\\hline
+RPPS & Répertoire Partagé des Professionnels de Santé (numéro à 11 chiffres).\\\hline
+RBAC & \emph{Role-Based Access Control} — contrôle d'accès basé sur les rôles.\\\hline
+JWT & \emph{JSON Web Token} — jeton d'authentification signé.\\\hline
+MFA & \emph{Multi-Factor Authentication} — authentification multifacteur.\\\hline
+SLA & \emph{Service Level Agreement} — accord de niveau de service.\\\hline
+PRA / PCA & Plan de Reprise / Continuité d'Activité.\\\hline
+RTO / RPO & \emph{Recovery Time / Point Objective} — temps et perte de données maximaux tolérés.\\\hline
+CRUD & \emph{Create, Read, Update, Delete} — opérations sur les données.\\\hline
+API REST & Interface de programmation respectant le style architectural REST.\\\hline
+FCFA & Franc CFA, devise des montants.\\\hline
+UAT & \emph{User Acceptance Test} — test / recette d'acceptation utilisateur.\\\hline
+RTM & \emph{Requirements Traceability Matrix} — matrice de traçabilité des exigences.\\\hline
+\end{longtable}
+\end{center}
+
+%==============================================================================
+%  SECTION 2
+%==============================================================================
+\section{Périmètre et Frontières du Système}
+
+Afin de prévenir la \textbf{dérive du périmètre} (\emph{scope creep}), cette section
+établit des frontières étanches au projet.
+
+\subsection{Inclusions Explicites (In Scope)}
+Le système prend en charge :
+\begin{itemize}[leftmargin=1.4em]
+  \item la gestion des comptes et l'authentification des quatre profils
+  (Administrateur, Médecin, Assureur, Assuré) ;
+  \item l'inscription et la gestion des assurés (NSS, affiliation, emploi,
+  médecin traitant) et des médecins (RPPS, spécialité) ;
+  \item l'enregistrement des consultations et la création automatique de la
+  feuille de maladie associée ;
+  \item la prescription de médicaments et l'orientation vers un spécialiste ;
+  \item la constitution, le calcul automatique, le suivi du cycle de vie et la
+  génération du justificatif PDF des remboursements ;
+  \item la consultation des feuilles de maladie et l'historique du parcours de soins ;
+  \item la journalisation d'audit des opérations sensibles ;
+  \item les notifications par courrier électronique aux assurés ;
+  \item un tableau de bord statistique pour l'assureur et l'administrateur.
+\end{itemize}
+
+\subsection{Exclusions Explicites (Out of Scope)}
+Sont \textbf{formellement écartées} de la présente version du projet, et n'engagent
+pas la maîtrise d'œuvre lors de la recette :
+\begin{itemize}[leftmargin=1.4em]
+  \item la prise de rendez-vous en ligne et la téléconsultation vidéo ;
+  \item la facturation comptable et l'intégration à un logiciel de comptabilité tiers ;
+  \item le paiement électronique en ligne (Mobile Money, carte bancaire) — seuls
+  les modes \emph{Virement} et \emph{Espèces} sont enregistrés à titre déclaratif ;
+  \item l'interfaçage avec des systèmes nationaux d'assurance maladie externes ;
+  \item l'application mobile native (iOS/Android) — l'accès se fait via navigateur
+  web responsive ;
+  \item l'authentification multifacteur (MFA) et le verrouillage de compte, prévus
+  pour une évolution ultérieure (cf. §8) ;
+  \item la gestion multilingue : l'interface est livrée en \textbf{français} uniquement ;
+  \item toute intégration avec des pharmacies, laboratoires ou objets connectés.
+\end{itemize}
+
+\subsection{Hypothèses, Dépendances et Contraintes}
+
+\textbf{Hypothèses de travail :}
+\begin{itemize}[leftmargin=1.4em]
+  \item disponibilité d'une connexion Internet sur les postes des utilisateurs
+  (l'application est exclusivement en ligne) ;
+  \item les utilisateurs disposent d'un navigateur récent (Chrome, Edge, Firefox) ;
+  \item les données de référence (assurés, médecins) sont saisies par l'assureur ou
+  l'administrateur.
+\end{itemize}
+
+\textbf{Dépendances critiques :}
+\begin{itemize}[leftmargin=1.4em]
+  \item plateforme d'hébergement frontend \textbf{Vercel} ;
+  \item serveur d'application \textbf{Tomcat 10.1} exécutant l'archive Spring Boot ;
+  \item serveur de base de données \textbf{PostgreSQL} ;
+  \item service de messagerie \textbf{SMTP Google (Gmail)} pour les notifications.
+\end{itemize}
+
+\textbf{Contraintes imposées :}
+\begin{itemize}[leftmargin=1.4em]
+  \item \emph{Technologiques} : socle Java~17 / Spring~Boot~3.2.x côté serveur ;
+  Next.js~14 / React~18 / TypeScript côté client.
+  \item \emph{Budgétaires} : recours prioritaire aux offres gratuites (contexte académique).
+  \item \emph{Temporelles} : réalisation complète en \textbf{3 mois} (cf. §10).
+  \item \emph{Réglementaires} : conformité aux lois camerounaises sur la
+  cybersécurité et la protection des données à caractère personnel (cf. §8 et §11).
+\end{itemize}
+
+%==============================================================================
+%  SECTION 3
+%==============================================================================
+\section{Description Générale et Modèle Opérationnel}
+
+\subsection{L'Écosystème et la Perspective du Produit}
+
+\textsc{Assurance Nation} est une \textbf{application web full-stack à architecture
+client-serveur découplée}, et non un progiciel autonome. Elle se compose :
+\begin{itemize}[leftmargin=1.4em]
+  \item d'un \textbf{client web} (Single Page Application Next.js/React) hébergé sur
+  Vercel, assurant la présentation et l'export PDF côté navigateur ;
+  \item d'une \textbf{API REST stateless} (Spring Boot, exposée en JSON) portant
+  l'ensemble de la logique métier et de la sécurité ;
+  \item d'une \textbf{base de données relationnelle} PostgreSQL persistant les données ;
+  \item d'un \textbf{service de notification} s'appuyant sur le SMTP Gmail.
+\end{itemize}
+
+Le diagramme de contexte de haut niveau ci-dessous présente le système comme une
+boîte noire centrale et ses flux d'interaction avec les acteurs humains et machines.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+  node distance=1.2cm and 2.4cm,
+  acteur/.style={draw,anbleu,thick,rounded corners,align=center,fill=anbleu!6,minimum height=1.0cm,minimum width=2.6cm},
+  systeme/.style={draw,anbleu,very thick,fill=anjaune!25,align=center,minimum height=2.0cm,minimum width=3.6cm},
+  ext/.style={draw,angris,thick,dashed,align=center,minimum height=1.0cm,minimum width=2.8cm},
+  flux/.style={-Stealth,thick,anbleu}]
+
+  \node[systeme] (sys) {\textbf{ASSURANCE}\\\textbf{NATION}\\\small(Système)};
+  \node[acteur,left=of sys] (med) {Médecin};
+  \node[acteur,above=of sys] (ass) {Assureur};
+  \node[acteur,right=of sys] (pat) {Assuré\\(Patient)};
+  \node[acteur,below=of sys] (adm) {Administrateur};
+  \node[ext,right=3.0cm of pat] (smtp) {Serveur SMTP\\Gmail};
+
+  \draw[flux] (med) -- node[above,sloped,font=\scriptsize]{consultations / prescriptions} (sys);
+  \draw[flux] (ass) -- node[right,font=\scriptsize]{remboursements / inscriptions} (sys);
+  \draw[flux] (pat) -- node[above,sloped,font=\scriptsize]{consultation dossiers} (sys);
+  \draw[flux] (adm) -- node[right,font=\scriptsize]{administration / audit} (sys);
+  \draw[flux] (sys.east) .. controls +(2,0) and +(-1,-1) .. node[below,font=\scriptsize]{notifications} (smtp.south west);
+\end{tikzpicture}
+\caption{Diagramme de contexte de haut niveau du système \textsc{Assurance Nation}.}
+\end{figure}
+
+\subsection{Typologie des Utilisateurs et Caractéristiques}
+
+\begin{center}
+\begin{longtable}{|L{2.6cm}|L{3.0cm}|L{3.0cm}|L{4.4cm}|}
+\hline
+\rowcolor{anbleu!12}\textbf{Profil} & \textbf{Expertise technique} & \textbf{Fréquence d'usage} & \textbf{Environnement d'opération}\\\hline
+\endhead
+Médecin & Moyenne & Quotidienne (en consultation) & Poste de bureau ou ordinateur portable au cabinet ; sessions courtes et répétées.\\\hline
+Assureur & Moyenne à élevée & Intensive (toute la journée) & Poste sédentaire, souvent double écran ; traitement de volumes de dossiers.\\\hline
+Assuré (Patient) & Faible & Occasionnelle & Domicile, navigateur grand public ; doit bénéficier d'une interface simple et guidée.\\\hline
+Administrateur & Élevée & Ponctuelle & Poste technique ; supervision, gestion des comptes et audit.\\\hline
+\end{longtable}
+\end{center}
+
+Cette classification fonde les exigences d'ergonomie et d'accessibilité (cf. §5) :
+priorité à la simplicité pour l'assuré, à la densité d'information pour l'assureur.
+
+%==============================================================================
+%  SECTION 4
+%==============================================================================
+\section{Exigences Fonctionnelles (Spécifications Métier)}
+
+Les exigences fonctionnelles définissent le \textbf{« Quoi »}. Conformément à la
+norme \textbf{ISO/IEC/IEEE~29148}, chaque exigence est atomique, vérifiable et
+documentée selon un schéma d'attributs strict (identifiant unique, intitulé,
+description impérative, priorité MoSCoW, complexité, critères d'acceptation, méthode
+de vérification).
+
+\subsection{Anatomie d'une Exigence Normée — Domaine Authentification \& Sécurité}
+
+\exig{EF-AUTH-01}{Inscription d'un utilisateur}
+{Le système doit permettre l'enregistrement d'un utilisateur (Médecin, Assuré ou
+Assureur) avec validation des champs obligatoires et unicité de l'adresse
+électronique.}
+{Must (Indispensable)}{Moyenne}
+{Un compte est créé ; l'e-mail en doublon est rejeté avec un message explicite ;
+le mot de passe respecte la politique (8+ caractères, 1 majuscule, 1 chiffre, 1
+caractère spécial) ; un couple jeton d'accès + jeton de rafraîchissement est retourné.}
+{Test automatisé + démonstration}
+
+\exig{EF-AUTH-02}{Authentification (connexion)}
+{Le système doit authentifier un utilisateur par e-mail et mot de passe et délivrer
+un jeton JWT signé.}
+{Must}{Faible}
+{Des identifiants valides ouvrent une session et renvoient un jeton d'accès
+(durée 15~min) et un jeton de rafraîchissement (durée 7~jours) ; des identifiants
+invalides retournent une erreur 401 sans divulgation.}
+{Test automatisé}
+
+\exig{EF-AUTH-03}{Rafraîchissement et déconnexion}
+{Le système doit renouveler un jeton d'accès expiré via le jeton de rafraîchissement
+et révoquer ce dernier à la déconnexion.}
+{Must}{Faible}
+{Un jeton de rafraîchissement valide produit un nouveau jeton d'accès ; après
+déconnexion, le jeton de rafraîchissement est révoqué et inutilisable.}
+{Test automatisé}
+
+\subsection{Domaine Gestion des Utilisateurs}
+
+\exig{EF-USR-01}{Gestion des assurés}
+{Le système doit permettre de créer, rechercher (par nom ou NSS), consulter, mettre
+à jour et supprimer logiquement un assuré.}
+{Must}{Moyenne}
+{Le NSS (15 chiffres) est unique et validé ; la recherche par NSS retourne l'assuré ;
+la suppression est logique (\emph{soft delete}) et exclut l'assuré des listes.}
+{Test automatisé + inspection}
+
+\exig{EF-USR-02}{Gestion des médecins}
+{Le système doit permettre de créer, rechercher (par nom, RPPS ou spécialité),
+consulter, mettre à jour et supprimer logiquement un médecin.}
+{Must}{Moyenne}
+{Le RPPS (11 chiffres) est unique ; un médecin spécialiste doit posséder un libellé
+de spécialité ; la suppression est logique.}
+{Test automatisé}
+
+\exig{EF-USR-03}{Affectation du médecin traitant}
+{Le système doit permettre à l'assureur ou l'administrateur d'affecter ou de modifier
+le médecin traitant d'un assuré.}
+{Should (Important)}{Faible}
+{Le médecin traitant est associé à l'assuré et restitué dans sa fiche.}
+{Démonstration}
+
+\exig{EF-USR-04}{Gestion du profil et du mot de passe}
+{Le système doit permettre à un utilisateur de consulter et modifier son profil et
+de changer son mot de passe après vérification du mot de passe courant.}
+{Must}{Faible}
+{La modification est restreinte au propriétaire ou à l'administrateur ; un mauvais
+mot de passe courant bloque le changement.}
+{Test automatisé}
+
+\subsection{Domaine Consultations et Prescriptions}
+
+\exig{EF-CONS-01}{Création d'une consultation}
+{Le système doit permettre à un médecin de créer une consultation (généraliste ou
+spécialiste) pour un assuré et de générer automatiquement la feuille de maladie associée.}
+{Must}{Élevée}
+{Une consultation est enregistrée avec son type ; une feuille de maladie liée est
+créée avec \texttt{estRemboursee=false} ; une notification est envoyée à l'assuré.}
+{Test automatisé + démonstration}
+
+\exig{EF-CONS-02}{Consultation et annulation}
+{Le système doit permettre de lister/consulter les consultations selon le rôle, et au
+médecin d'annuler (suppression logique) une consultation.}
+{Must}{Moyenne}
+{Le médecin ne voit que ses consultations, le patient les siennes, l'assureur/admin
+toutes ; l'annulation est logique et notifiée.}
+{Test automatisé}
+
+\exig{EF-PRESC-01}{Prescription de médicament}
+{Le système doit permettre au médecin d'ajouter à une consultation une prescription
+de médicament (nom, posologie, durée 1--365 jours, notes).}
+{Must}{Moyenne}
+{La prescription est rattachée à la consultation ; le médicament et la durée sont
+obligatoires ; l'assuré est notifié.}
+{Test automatisé}
+
+\exig{EF-PRESC-02}{Orientation vers un spécialiste}
+{Le système doit permettre au médecin de prescrire une consultation chez un
+spécialiste (motif, priorité, code de référence, spécialiste optionnel).}
+{Must}{Moyenne}
+{La prescription de type \emph{CONSULTATION\_SPECIALISTE} est créée avec un code de
+référence ; le motif est obligatoire.}
+{Test automatisé}
+
+\subsection{Domaine Feuilles de Maladie et Remboursements}
+
+\exig{EF-FM-01}{Consultation des feuilles de maladie}
+{Le système doit permettre de lister et consulter les feuilles de maladie d'un assuré
+avec filtres (période, statut de remboursement).}
+{Must}{Faible}
+{Les filtres par date et statut s'appliquent ; une feuille déjà remboursée n'est plus
+modifiable.}
+{Test automatisé}
+
+\exig{EF-RB-01}{Création d'un remboursement}
+{Le système doit permettre à l'assureur de créer un remboursement à partir d'une
+feuille de maladie, avec calcul automatique du montant (100~\% généraliste, 80~\%
+spécialiste) et génération du justificatif PDF.}
+{Must}{Élevée}
+{Le remboursement est créé au statut \emph{PENDING} avec un numéro unique ; le montant
+remboursé est correctement calculé ; un PDF justificatif est disponible ; une feuille
+déjà remboursée est refusée.}
+{Test automatisé + démonstration}
+
+\exig{EF-RB-02}{Cycle de vie du remboursement (workflow)}
+{Le système doit gérer les transitions d'état du remboursement et notifier l'assuré à
+chaque étape.}
+{Must}{Élevée}
+{Transitions autorisées : PENDING$\to$APPROVED, APPROVED$\to$PAID, PENDING$\to$REJECTED
+(avec motif) ; toute transition illégale est rejetée ; un courriel est envoyé à l'assuré.}
+{Test automatisé}
+
+\exig{EF-RB-03}{Téléchargement du justificatif}
+{Le système doit permettre le téléchargement du justificatif PDF d'un remboursement.}
+{Should}{Faible}
+{Le document PDF est restitué avec le type MIME \texttt{application/pdf}.}
+{Démonstration}
+
+\exig{EF-RB-04}{Tableau de bord des remboursements}
+{Le système doit fournir un tableau de bord statistique (compteurs par statut, montants,
+tendance mensuelle, répartition par spécialité).}
+{Should}{Moyenne}
+{Les compteurs et montants correspondent aux données ; les graphiques s'affichent.}
+{Démonstration + analyse}
+
+\subsection{Domaine Audit et Notifications}
+
+\exig{EF-AUD-01}{Journal d'audit inaltérable}
+{Le système doit historiser toute opération sensible (création, modification,
+suppression) sur les entités Utilisateur, Consultation, Prescription et Remboursement.}
+{Must}{Moyenne}
+{Chaque opération produit une entrée d'audit (type d'entité, identifiant, action, ancien
+et nouveau état, horodatage, adresse IP, acteur) ; le journal est consultable par
+l'administrateur et non modifiable.}
+{Inspection + test automatisé}
+
+\exig{EF-NOT-01}{Notifications par courrier électronique}
+{Le système doit notifier l'assuré lors des événements clés (consultation, prescription,
+étapes de remboursement) via le SMTP Gmail, de façon asynchrone.}
+{Should}{Moyenne}
+{Un courriel est émis pour chaque événement ; un échec d'envoi ne bloque pas l'opération
+métier.}
+{Démonstration}
+
+\subsection{Organisation par Cas d'Utilisation et Workflows}
+
+\subsubsection{Cas d'utilisation — Effectuer un remboursement (UC-RB)}
+\begin{description}[leftmargin=2.2cm,style=nextline]
+  \item[Acteur principal] Assureur (ou Administrateur).
+  \item[Préconditions] L'assureur est authentifié ; une feuille de maladie non encore
+  remboursée existe pour l'assuré.
+  \item[Scénario nominal]
+  \begin{enumerate}[leftmargin=1.6em]
+    \item L'assureur recherche l'assuré par son NSS.
+    \item Il sélectionne la feuille de maladie concernée.
+    \item Il saisit le montant total et le mode de paiement (Virement/Espèces).
+    \item Le système calcule le montant remboursé selon le type de consultation.
+    \item Le système crée le remboursement au statut \emph{PENDING}, génère le PDF et
+    notifie l'assuré.
+    \item L'assureur approuve, puis marque comme payé.
+  \end{enumerate}
+  \item[Scénarios alternatifs]
+  \begin{itemize}[leftmargin=1.6em]
+    \item A1 : la feuille est déjà remboursée $\Rightarrow$ le système refuse la création.
+    \item A2 : montant invalide ($\leq 0$) $\Rightarrow$ message de validation.
+    \item A3 : rejet de la demande $\Rightarrow$ statut \emph{REJECTED} avec motif obligatoire.
+  \end{itemize}
+  \item[Post-conditions] Le remboursement est persisté dans son état final ; la feuille
+  de maladie est marquée remboursée ; les événements sont audités et notifiés.
+\end{description}
+
+\subsubsection{Modélisation du workflow de remboursement (BPM)}
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[node distance=2.2cm,
+  etat/.style={draw,anbleu,thick,rounded corners,fill=anbleu!8,minimum width=2.2cm,minimum height=0.9cm,align=center},
+  fin/.style={draw,thick,rounded corners,minimum width=2.0cm,minimum height=0.9cm,align=center},
+  fl/.style={-Stealth,thick}]
+  \node[etat] (p) {PENDING};
+  \node[etat,right=of p] (a) {APPROVED};
+  \node[fin,fill=green!12,right=of a] (pa) {PAID};
+  \node[fin,fill=red!12,below=1.3cm of p] (r) {REJECTED};
+  \draw[fl] (p) -- node[above,font=\scriptsize]{approuver} (a);
+  \draw[fl] (a) -- node[above,font=\scriptsize]{marquer payé} (pa);
+  \draw[fl] (p) -- node[left,font=\scriptsize]{rejeter (motif)} (r);
+\end{tikzpicture}
+\caption{Workflow d'approbation du remboursement : événements déclencheurs et
+notifications associées à chaque transition.}
+\end{figure}
+
+\subsection{Exigences sur le Modèle et le Cycle de Vie des Données}
+
+Les traitements reposent sur un modèle de données relationnel. Les entités
+principales, leurs attributs clés et leurs contraintes d'intégrité sont formalisés
+ci-dessous.
+
+\begin{center}
+\begin{longtable}{|L{3.0cm}|L{7.0cm}|L{4.0cm}|}
+\hline
+\rowcolor{anbleu!12}\textbf{Entité} & \textbf{Attributs principaux} & \textbf{Contraintes \& relations}\\\hline
+\endhead
+\texttt{User} (abstrait) & id (UUID), email, passwordHash, nom, prénom, dateNaissance,
+adresse, téléphone, sexe, photoUrl, horodatages d'audit & email \textbf{unique, non nul} ;
+N--N avec \texttt{Role} ; sous-types Médecin / Assuré / Assureur.\\\hline
+\texttt{Medecin} & numéroRPPS, spécialité (GENERALISTE/SPECIALISTE), libellé, estAssure &
+RPPS \textbf{unique} ; 1--N \texttt{Consultation} ; 1--N assurés suivis.\\\hline
+\texttt{Assure} & numSécuritéSociale, dateAffiliation, emploi, estActif &
+NSS \textbf{unique} ; N--1 médecin traitant ; 1--N feuilles de maladie.\\\hline
+\texttt{Consultation} & dateConsultation, type, diagnostic, motif, notes &
+N--1 Assuré, N--1 Médecin ; 1--N Prescriptions ; 1--1 Feuille de maladie.\\\hline
+\texttt{Prescription} (abstrait) & type & N--1 Consultation ; sous-types
+\texttt{PrescriptionMedicament} et \texttt{PrescriptionConsultation}.\\\hline
+\texttt{MedicalRecord} & date, nomMaladie, estRemboursee, montantRemboursé &
+1--1 Consultation \textbf{unique} ; N--1 Assuré et Médecin.\\\hline
+\texttt{Reimbursement} & numRemboursement, montantTotal, taux, montantRemboursé,
+modePaiement, status & numéro \textbf{unique} ; 1--1 Feuille de maladie ; statut $\in$
+\{PENDING, APPROVED, PAID, REJECTED\}.\\\hline
+\texttt{Role / Permission} & nom, description & N--N ; jeu de rôles ADMIN, MEDECIN,
+ASSUREUR, PATIENT.\\\hline
+\texttt{RefreshToken} & token, expiryDate, revoked & N--1 User.\\\hline
+\texttt{AuditLog} & entityType, entityId, action, oldValue, newValue, timestamp, ip &
+N--1 User (acteur) ; \textbf{inaltérable}.\\\hline
+\end{longtable}
+\end{center}
+
+\textbf{Règles de cycle de vie (CRUD) :} la suppression des entités sensibles est
+\textbf{logique} (\emph{soft delete} via \texttt{deleted\_at}) afin de préserver la
+piste d'audit ; aucune donnée n'est physiquement détruite. Les feuilles de maladie
+remboursées sont en lecture seule. L'intégrité référentielle est garantie par clés
+étrangères et contraintes d'unicité (email, NSS, RPPS, numéro de remboursement).
+
+%==============================================================================
+%  SECTION 5
+%==============================================================================
+\section{Exigences Non-Fonctionnelles (Attributs de Qualité)}
+
+Les exigences non-fonctionnelles dictent le \textbf{« Comment »} et garantissent que le
+logiciel survivra à son environnement d'exploitation.
+
+\subsection{Performance, Tolérance et Scalabilité}
+\begin{itemize}[leftmargin=1.4em]
+  \item \textbf{Temps de réponse} : opérations courantes (lecture, création unitaire)
+  $\leq$ 1,5~s au 95\textsuperscript{e} percentile ; requêtes complexes (tableau de
+  bord, recherches filtrées) $\leq$ 3~s.
+  \item \textbf{Pagination} : toutes les listes sont paginées (taille par défaut 20,
+  maximum 100) pour borner la charge.
+  \item \textbf{Concurrence nominale} : le système doit supporter au moins
+  \textbf{100 utilisateurs concurrents} sans dégradation perceptible.
+  \item \textbf{Volumétrie projetée} : capacité d'absorber $\geq$ 100\,000 assurés,
+  500\,000 consultations et 500\,000 remboursements sur une projection de 3 ans.
+  \item \textbf{Statelessness} : l'API étant sans état (JWT), elle peut être mise à
+  l'échelle horizontalement.
+\end{itemize}
+
+\subsection{Fiabilité, Disponibilité et Maintien en Condition Opérationnelle}
+\begin{itemize}[leftmargin=1.4em]
+  \item \textbf{Disponibilité (SLA)} : taux de disponibilité cible de \textbf{99,5~\%}
+  mensuel en phase pilote (objectif 99,9~\% en production cible).
+  \item \textbf{Fenêtre de maintenance} : interruptions planifiées $\leq$ 4~h/mois,
+  notifiées 48~h à l'avance, hors heures ouvrées.
+  \item \textbf{Mode dégradé} : un échec du service de notification (SMTP) ne doit pas
+  interrompre les opérations métier (envoi asynchrone, erreur journalisée).
+  \item \textbf{Tolérance aux pannes} : la couche d'accès aux données et les transactions
+  garantissent la cohérence ; un point de santé (\texttt{/health}) expose l'état de l'API,
+  de la base et de l'espace disque.
+\end{itemize}
+
+\subsection{Ergonomie, Expérience Utilisateur et Accessibilité}
+\begin{itemize}[leftmargin=1.4em]
+  \item \textbf{Charte graphique} : respect des couleurs institutionnelles
+  (bleu primaire \texttt{\#0066CC}, bleu marine \texttt{\#003366}, accent vert
+  \texttt{\#00AA44}) et de la typographie de marque.
+  \item \textbf{Conception centrée utilisateur} : parcours simplifiés pour l'assuré,
+  vues denses pour l'assureur (cf. §3.2).
+  \item \textbf{Responsive design} : adaptation mobile (320~px), tablette et bureau
+  (1024~px+).
+  \item \textbf{Thème} : modes clair et sombre, préférence persistée.
+  \item \textbf{Accessibilité} : conformité visée au niveau \textbf{WCAG~2.1~AA}
+  (contrastes, navigation clavier, libellés de formulaires, attributs ARIA).
+\end{itemize}
+
+\subsection{Maintenabilité, Portabilité et Compatibilité}
+\begin{itemize}[leftmargin=1.4em]
+  \item \textbf{Navigateurs supportés} : Chrome, Edge, Firefox (deux dernières versions
+  majeures).
+  \item \textbf{Frameworks pérennes} : Spring Boot 3.2.x (LTS Java 17), Next.js 14
+  (React 18), TypeScript, choisis pour leur support à long terme.
+  \item \textbf{Standards de codage} : conventions Java et ESLint/TypeScript ; revue de
+  code systématique.
+  \item \textbf{Documentation technique} : API documentée via OpenAPI/Swagger ;
+  documentation du modèle de données et des diagrammes UML livrée.
+  \item \textbf{Portabilité} : application conteneurisable (Docker) ; persistance via JPA
+  abstrayant le SGBD relationnel.
+  \item \textbf{Testabilité} : couverture de tests du service métier $\geq$ 70~\%
+  d'instructions.
+\end{itemize}
+
+%==============================================================================
+%  SECTION 7  (la 6 est volontairement omise)
+%==============================================================================
+\setcounter{section}{6}
+\section{Exigences Relatives à l'Hébergement et aux Architectures Cloud / SaaS}
+
+\subsection{Modèle de Déploiement et Ségrégation des Données}
+
+Le système adopte un \textbf{modèle de déploiement en cloud public}, avec séparation
+nette des responsabilités :
+\begin{itemize}[leftmargin=1.4em]
+  \item \textbf{Frontend} hébergé sur \textbf{Vercel} (rendu Next.js, prérendu de
+  contenu statique, CDN) ;
+  \item \textbf{Backend} packagé en archive exécutable Spring Boot et servi par
+  \textbf{Tomcat 10.1} sur la JVM ;
+  \item \textbf{Base de données} \textbf{PostgreSQL}, instance \texttt{assurance\_nation} ;
+  \item \textbf{Notifications} via le serveur \textbf{SMTP Google (Gmail)}.
+\end{itemize}
+
+Les flux et les ports normalisés de l'architecture de déploiement sont :
+\begin{enumerate}[leftmargin=1.6em]
+  \item Navigateur $\to$ Frontend Vercel : \textbf{HTTPS / port 443} ;
+  \item Navigateur $\to$ API Backend : \textbf{REST / HTTPS / JSON / port 8083} ;
+  \item Backend $\to$ Base de données : \textbf{JPA / JDBC / TCP / port 5432} ;
+  \item Backend $\to$ SMTP Gmail : \textbf{TLS / STARTTLS / port 587}.
+\end{enumerate}
+
+\textbf{Ségrégation et étanchéité des données :} l'instance de base de données est
+\textbf{dédiée} à l'application (\emph{single-tenant} logique). Dans l'hypothèse d'un
+hébergement mutualisé, l'isolation est garantie par un schéma propre, des comptes de
+service à privilèges minimaux et le chiffrement des connexions (JDBC sur TLS), afin
+d'éviter toute porosité d'informations entre clients.
+
+\subsection{Schéma d'Architecture de Déploiement}
+
+Le schéma ci-dessous formalise l'architecture cible (postes clients, hébergement
+frontend, serveur d'application, base de données et service de messagerie) ainsi que
+les protocoles et ports d'interconnexion.
+
+\begin{figure}[H]
+\centering
+\resizebox{\linewidth}{!}{%
+\begin{tikzpicture}[font=\scriptsize,
+  comp/.style={draw,align=center,minimum height=0.9cm,minimum width=2.8cm,fill=white,inner sep=3pt},
+  dbc/.style={draw,cylinder,shape border rotate=90,aspect=0.28,align=center,minimum width=2.8cm,minimum height=1.3cm,fill=white},
+  cont/.style={draw,thick,rounded corners=2pt,fill=anbleu!4},
+  lbl/.style={font=\scriptsize\bfseries\color{anbleu}},
+  fl/.style={-Stealth,thick,anbleu},
+  dfl/.style={-Stealth,thick,dotted},
+  flab/.style={font=\scriptsize,align=center,fill=white,inner sep=1.5pt}]
+
+  % --- Poste client ---
+  \node[comp,minimum width=6.8cm] (nav) at (6,9.4) {Navigateur Web : Chrome, Edge, Firefox};
+  \node[comp] (react) at (4.2,8.0) {React State /\\LocalStorage};
+  \node[comp] (pdf)   at (7.8,8.0) {jsPDF / html2canvas\\(Export PDF)};
+  \begin{scope}[on background layer]
+    \node[cont,fit=(nav)(react)(pdf),inner sep=9pt] (client) {};
+  \end{scope}
+  \node[lbl,anchor=south west,yshift=1pt] at (client.north west) {Poste Client};
+
+  % --- Cloud Vercel ---
+  \node[comp] (next)   at (1.8,4.6) {Next.js App Server /\\Node.js Engine};
+  \node[comp] (assets) at (6.5,4.6) {Static HTML/CSS/JS\\Assets};
+  \draw[dfl] (next) -- node[above,font=\scriptsize,fill=white,inner sep=1pt]{prérendu} (assets);
+  \begin{scope}[on background layer]
+    \node[cont,fit=(next)(assets),inner sep=9pt] (vercel) {};
+  \end{scope}
+  \node[lbl,anchor=south west,yshift=1pt] at (vercel.north west) {Cloud Vercel (Hébergement Frontend)};
+
+  % --- Serveur d'application ---
+  \node[comp,minimum width=3.8cm] (spring) at (11.9,5.5) {SpringBootApplication.jar\\Tomcat 10.1};
+  \node[comp,minimum width=3.8cm] (jvm)    at (11.9,4.1) {Java Virtual Machine (JVM)};
+  \draw[fl] (spring) -- (jvm);
+  \begin{scope}[on background layer]
+    \node[cont,fit=(spring)(jvm),inner sep=9pt] (appsrv) {};
+  \end{scope}
+  \node[lbl,anchor=south,yshift=1pt] at (appsrv.north) {Serveur d'application};
+
+  % --- Serveur de base de données ---
+  \node[comp,minimum width=3.2cm] (pg)  at (5.3,1.4) {PostgreSQL\\Database Server};
+  \node[dbc] (dbi) at (5.3,-0.9) {Database Instance:\\\texttt{assurance\_nation}};
+  \draw[fl] (pg) -- node[right]{DBMS Node} (dbi);
+  \begin{scope}[on background layer]
+    \node[cont,fit=(pg)(dbi),inner sep=9pt] (dbsrv) {};
+  \end{scope}
+  \node[lbl,anchor=south west,yshift=1pt] at (dbsrv.north west) {Serveur de base de données};
+
+  % --- Serveur SMTP ---
+  \node[comp,minimum width=3.2cm] (smtp) at (12.5,-0.3) {smtp.gmail.com\\Port 587};
+  \begin{scope}[on background layer]
+    \node[cont,fit=(smtp),inner sep=9pt] (smtpsrv) {};
+  \end{scope}
+  \node[lbl,anchor=south west,yshift=1pt] at (smtpsrv.north west) {Serveur SMTP Google (Gmail)};
+
+  % --- Flux ---
+  \draw[fl] (3.4,0|-client.south) -- node[flab,pos=0.5]{1. HTTPS\\Port 443}
+            (3.4,0|-vercel.north);
+  \draw[fl] (8.6,0|-client.south) -- node[flab,pos=0.45]{2. REST / HTTPS\\JSON / Port 8083}
+            (appsrv.north west);
+  \draw[fl] (appsrv.south west) -- node[flab,pos=0.5]{3. JPA / JDBC\\TCP / Port 5432}
+            (dbsrv.east);
+  \draw[fl] ([xshift=0.6cm]appsrv.south) -- node[flab,pos=0.55]{4. TLS / STARTTLS\\Port 587}
+            (smtpsrv.north);
+\end{tikzpicture}}
+\caption{Diagramme de déploiement de la plateforme \textsc{Assurance Nation} :
+navigateur web, hébergement frontend Vercel, serveur d'application Spring~Boot /
+Tomcat~10.1, base de données PostgreSQL (\texttt{assurance\_nation}) et serveur SMTP
+Gmail, avec les protocoles et ports normalisés.}
+\end{figure}
+
+\subsection{Plans de Continuité, Sauvegardes et Réversibilité}
+
+\textbf{PRA / PCA :}
+\begin{itemize}[leftmargin=1.4em]
+  \item \textbf{RTO} (temps de récupération maximal) : $\leq$ 4~heures pour le service
+  applicatif ;
+  \item \textbf{RPO} (perte de données maximale tolérée) : $\leq$ 24~heures (aligné sur
+  la fréquence de sauvegarde) ;
+  \item procédure de redéploiement documentée (image conteneur + restauration de base)
+  permettant une reprise sur incident majeur.
+\end{itemize}
+
+\textbf{Politique de sauvegarde :}
+\begin{itemize}[leftmargin=1.4em]
+  \item sauvegarde complète \textbf{quotidienne} de la base \texttt{assurance\_nation} ;
+  \item \textbf{externalisation sécurisée} des supports (stockage chiffré distinct du
+  serveur de production) ;
+  \item \textbf{rétention} de 30 jours glissants minimum, avec test de restauration
+  périodique.
+\end{itemize}
+
+\textbf{Réversibilité :} en fin de contrat, le client peut récupérer
+\textbf{l'intégralité de ses données} dans un format interopérable et non chiffré
+(export SQL et/ou CSV/JSON), accompagné du schéma de données et de la documentation,
+sans aucune rétention abusive de la part de l'éditeur. Les justificatifs PDF sont
+exportés tels quels.
+
+%==============================================================================
+%  SECTION 8
+%==============================================================================
+\section{Cybersécurité et Conformité Réglementaire}
+
+\subsection{Ingénierie de Sécurité (Security by Design)}
+La sécurité est intégrée dès la conception :
+\begin{itemize}[leftmargin=1.4em]
+  \item \textbf{Protection contre les vulnérabilités classiques} : prévention des
+  injections SQL par l'usage de requêtes paramétrées (JPA/ORM) ; protection contre les
+  failles XSS par l'échappement des sorties côté client et la validation des entrées
+  (Zod côté frontend, Bean Validation côté backend).
+  \item \textbf{Chiffrement en transit} : l'ensemble des communications externes
+  s'effectue en HTTPS/TLS (ports 443 et 8083) ; les courriels via STARTTLS (587) ; la
+  connexion base via JDBC sur TLS.
+  \item \textbf{Chiffrement au repos} : chiffrement des volumes de stockage et des
+  sauvegardes ; les données sensibles bénéficient des mécanismes de chiffrement du SGBD.
+  \item \textbf{Stockage des mots de passe} : algorithme de hachage robuste et salé
+  \textbf{BCrypt} (facteur de coût 12). Aucun mot de passe n'est stocké en clair.
+\end{itemize}
+
+\subsection{Gestion des Habilitations, Traçabilité et Audit}
+\begin{itemize}[leftmargin=1.4em]
+  \item \textbf{Contrôle d'accès basé sur les rôles (RBAC)} : quatre rôles (ADMIN,
+  MEDECIN, ASSUREUR, PATIENT) ; application stricte du \textbf{principe du moindre
+  privilège} via la sécurité au niveau des méthodes (\texttt{@PreAuthorize}) et le
+  contrôle de propriété (un médecin n'accède qu'à ses consultations, un assuré qu'à
+  ses propres dossiers).
+  \item \textbf{Authentification} : jetons JWT signés (HMAC-SHA256), session sans état,
+  jetons d'accès de courte durée (15~min) et jetons de rafraîchissement révocables.
+  \item \textbf{Évolutions prévues} : authentification multifacteur (MFA) et
+  verrouillage de compte après tentatives infructueuses (cf. §2.2 — hors périmètre de
+  la version courante, recommandés pour la mise en production réelle).
+  \item \textbf{Journaux d'audit inaltérables} : chaque accès ou modification de donnée
+  sensible est historisé (qui, quoi, quand, depuis quelle adresse IP, ancien/nouvel
+  état), conformément à l'exigence EF-AUD-01.
+\end{itemize}
+
+\subsection{Conformité Réglementaire (Protection des Données)}
+Le traitement de données de santé, particulièrement sensibles, impose :
+\begin{itemize}[leftmargin=1.4em]
+  \item le respect de la \textbf{loi camerounaise n\textsuperscript{o}~2024/017 du
+  23 décembre 2024} régissant la protection des données à caractère personnel, et de
+  la \textbf{loi n\textsuperscript{o}~2010/012 du 21 décembre 2010} relative à la
+  cybersécurité et à la cybercriminalité au Cameroun, sous l'égide de l'\textbf{ANTIC} ;
+  \item la prise en compte des principes du \textbf{RGPD} (UE) comme état de l'art :
+  minimisation, finalité, consentement, droit d'accès et de rectification, durée de
+  conservation limitée ;
+  \item la confidentialité du secret médical ; l'accès aux données de santé est
+  strictement restreint par le RBAC et tracé par l'audit.
+\end{itemize}
+
+%==============================================================================
+%  SECTION 10  (la 9 est volontairement omise)
+%==============================================================================
+\setcounter{section}{9}
+\section{Méthodologie, Gestion de Projet et Assurance Qualité}
+
+\subsection{Cadre Méthodologique et Cycle de Développement}
+Le projet adopte une \textbf{approche Agile itérative} adaptée au contexte académique
+(itérations hebdomadaires, démonstrations régulières, gestion d'un \emph{backlog}
+d'exigences), tout en s'appuyant sur des \textbf{jalons documentaires} hérités d'un
+cycle en V pour les phases d'analyse et de conception (cahier d'analyse UML approuvé
+avant développement).
+
+\textbf{Rôles :}
+\begin{itemize}[leftmargin=1.4em]
+  \item \textbf{Chef de projet / Product Owner} : TAGNE TEGUEO KUATE FREEDY-JULIO —
+  priorisation du backlog, interface avec l'encadrement.
+  \item \textbf{Encadrement (maîtrise d'ouvrage)} : Dr. Anne Marie CHANA,
+  Dr. Jaures Styve KAMENI — validation des jalons.
+  \item \textbf{Équipe de réalisation} : membres du Groupe 9, répartis en sous-équipes
+  Analyse/Conception, Backend, Frontend et Tests.
+\end{itemize}
+
+\subsection{Stratégie de Test et Plan de Validation}
+\begin{itemize}[leftmargin=1.4em]
+  \item \textbf{Tests unitaires automatisés} : JUnit~5 (backend), Vitest (frontend) —
+  cible $\geq$ 70~\% d'instructions sur la couche service.
+  \item \textbf{Tests d'intégration} : Spring Boot Test + Testcontainers ; REST Assured
+  pour les contrats d'API.
+  \item \textbf{Tests de bout en bout (E2E)} : Cypress (parcours connexion, création de
+  consultation, demande de remboursement).
+  \item \textbf{Tests de charge} : simulation d'au moins 100 utilisateurs concurrents
+  (validation de l'exigence de performance).
+  \item \textbf{Recette / UAT} : validation par l'encadrement sur les critères
+  d'acceptation des exigences fonctionnelles.
+\end{itemize}
+
+\textbf{Classification des anomalies et délais de correction :}
+\begin{center}
+\begin{longtable}{|L{2.6cm}|L{7.4cm}|L{3.4cm}|}
+\hline
+\rowcolor{anbleu!12}\textbf{Gravité} & \textbf{Définition} & \textbf{Délai de correction}\\\hline
+\endhead
+Bloquante & Empêche l'usage d'une fonction majeure ; aucun contournement. & 24~h ; bloque la mise en production.\\\hline
+Majeure & Dysfonctionnement important avec contournement possible. & 72~h.\\\hline
+Mineure & Défaut cosmétique ou de confort sans impact métier. & Prochaine itération.\\\hline
+\end{longtable}
+\end{center}
+
+\subsection{Accompagnement, Déploiement et Formation}
+Le plan d'accompagnement au changement comprend la production des \textbf{manuels
+utilisateurs} (par profil), de la \textbf{documentation technique} (API OpenAPI,
+modèle de données, guide de déploiement) et de sessions de prise en main.
+
+\subsection{Planning Prévisionnel — Diagramme de Gantt (3 mois)}
+Le diagramme ci-dessous présente le planning réel du projet, de la conception
+(diagrammes UML) jusqu'au code et au déploiement, sur un horizon de \textbf{3 mois}
+(12 semaines).
+
+\begin{figure}[H]
+\centering
+\resizebox{\linewidth}{!}{%
+\begin{ganttchart}[
+  hgrid, vgrid,
+  bar/.append style={fill=anbleu!55,draw=anbleu},
+  bar height=0.55,
+  group/.append style={fill=anjaune!70,draw=anjaune!90!black},
+  milestone/.append style={fill=red!70,draw=red!80!black},
+  title/.append style={fill=anbleu!12},
+  title label font=\footnotesize\bfseries,
+  bar label font=\footnotesize,
+  group label font=\footnotesize\bfseries,
+  milestone label font=\scriptsize,
+  y unit chart=0.55cm, y unit title=0.6cm
+  ]{1}{12}
+  \gantttitle{Mois 1}{4}\gantttitle{Mois 2}{4}\gantttitle{Mois 3}{4}\\
+  \gantttitlelist{1,...,12}{1}\\
+
+  \ganttgroup{Cadrage \& Analyse}{1}{5}\\
+  \ganttbar{Planification \& cahier des charges}{1}{2}\\
+  \ganttbar{Diag. contexte / package / classes}{2}{4}\\
+  \ganttbar{Cas d'utilisation \& activités}{3}{5}\\
+  \ganttbar{Diag. séquence système}{4}{5}\\
+  \ganttmilestone{Cahier d'analyse validé}{5}\\
+
+  \ganttgroup{Conception}{5}{8}\\
+  \ganttbar{Séquences \& classes techniques}{5}{7}\\
+  \ganttbar{Modèle de données \& architecture}{6}{8}\\
+  \ganttmilestone{Conception figée}{8}\\
+
+  \ganttgroup{Développement}{6}{11}\\
+  \ganttbar{Backend Spring Boot (API, sécurité JWT)}{6}{11}\\
+  \ganttbar{Frontend Next.js (pages, intégration)}{7}{11}\\
+
+  \ganttgroup{Qualité \& Livraison}{10}{12}\\
+  \ganttbar{Tests (unitaires, intégration, E2E)}{10}{12}\\
+  \ganttbar{Recette (UAT) \& corrections}{11}{12}\\
+  \ganttbar{Déploiement \& documentation}{12}{12}\\
+  \ganttmilestone{Livraison finale}{12}
+\end{ganttchart}}
+\caption{Diagramme de Gantt du projet \textsc{Assurance Nation} : de la conception
+(diagrammes UML) au code et au déploiement, sur 3 mois.}
+\end{figure}
+
+%==============================================================================
+%  SECTION 11
+%==============================================================================
+\section{Cadre Contractuel, Financier et Juridique}
+
+\emph{Le présent cadre est établi conformément au droit camerounais applicable.}
+
+\subsection{Structure de Tarification et Propriété Intellectuelle}
+\textbf{Modèle économique :} dans le contexte académique, la prestation est réalisée
+au \textbf{forfait} (engagement de résultat sur le périmètre du §2). Pour une
+exploitation réelle, trois modèles sont envisageables : développement au forfait
+(prix fixe), facturation en régie (au temps passé), ou abonnement récurrent (SaaS).
+
+\textbf{Propriété intellectuelle :} conformément à la \textbf{loi camerounaise
+n\textsuperscript{o}~2000/011 du 19 décembre 2000} relative au droit d'auteur et aux
+droits voisins, et aux dispositions de l'\textbf{OAPI} (Accord de Bangui révisé) :
+\begin{itemize}[leftmargin=1.4em]
+  \item le code source développé spécifiquement fait l'objet d'une \textbf{cession
+  totale des droits patrimoniaux} au profit du commanditaire (l'organisme de sécurité
+  sociale), une fois la prestation soldée ;
+  \item les modules et bibliothèques tiers (open source) demeurent sous leurs licences
+  respectives, en \textbf{concession d'usage} ;
+  \item des \textbf{clauses de confidentialité} protègent le patrimoine informationnel
+  (données médicales, savoir-faire) partagé durant l'ingénierie.
+\end{itemize}
+
+\subsection{Pénalités, Responsabilités et Résolution des Litiges}
+\begin{itemize}[leftmargin=1.4em]
+  \item \textbf{Pénalités de retard} : en cas de dépassement abusif des échéances
+  contractuelles, application d'une pénalité forfaitaire par jour ouvré de retard,
+  plafonnée, telle que stipulée au contrat.
+  \item \textbf{Non-livraison / non-conformité} : la non-livraison de fonctionnalités
+  classées \emph{Must} ou le non-respect du SLA de disponibilité (cf. §5) ouvrent droit
+  à pénalités et, le cas échéant, à la résiliation.
+  \item \textbf{Responsabilité} : les obligations et la limitation de responsabilité
+  s'apprécient au regard du \textbf{Code civil} applicable au Cameroun ; le prestataire
+  est tenu d'une obligation de moyens renforcée sur la sécurité des données.
+  \item \textbf{Escalade et arbitrage} : tout différend est d'abord soumis à un
+  règlement amiable ; à défaut, il relève des juridictions camerounaises compétentes,
+  l'arbitrage pouvant être conduit selon le \textbf{droit OHADA} (Acte uniforme relatif
+  à l'arbitrage, CCJA).
+\end{itemize}
+
+%==============================================================================
+%  SECTION 12
+%==============================================================================
+\section{Annexes et Matrice de Traçabilité (RTM)}
+
+\subsection{Annexes — Artefacts Visuels}
+Sont annexés au présent cahier des charges, en complément du \emph{Cahier d'Analyse} :
+\begin{itemize}[leftmargin=1.4em]
+  \item les \textbf{diagrammes UML} (contexte, packages, classes métier et techniques,
+  objets, cas d'utilisation, activités, séquences système et techniques) ;
+  \item le \textbf{schéma d'architecture de déploiement} (cf. §7.2) ;
+  \item le \textbf{schéma du modèle de données} relationnel (cf. §4.8) ;
+  \item les \textbf{wireframes} et maquettes d'interface des écrans principaux
+  (connexion, tableau de bord, consultations, remboursements).
+\end{itemize}
+
+\subsection{Matrice de Traçabilité des Exigences (RTM)}
+La matrice ci-dessous relie chaque \textbf{besoin métier} initial à son
+\textbf{exigence logicielle} détaillée et au \textbf{scénario de test} qui la valide,
+permettant des analyses d'impact fiables en cas de demande de changement.
+
+\begin{center}
+\begin{longtable}{|L{3.6cm}|L{2.4cm}|L{2.2cm}|L{4.6cm}|}
+\hline
+\rowcolor{anbleu!12}\textbf{Besoin métier} & \textbf{Exigence} & \textbf{Priorité} & \textbf{Scénario de test}\\\hline
+\endhead
+Centraliser l'accès sécurisé des acteurs & EF-AUTH-01/02/03 & Must & TST-AUTH : inscription, connexion, refresh, déconnexion.\\\hline
+Gérer les assurés et leurs médecins traitants & EF-USR-01/03 & Must/Should & TST-USR-ASSURE : CRUD, unicité NSS, affectation médecin traitant.\\\hline
+Gérer le référentiel des médecins & EF-USR-02 & Must & TST-USR-MED : CRUD, unicité RPPS, spécialité.\\\hline
+Permettre la gestion de compte personnel & EF-USR-04 & Must & TST-PROFIL : mise à jour profil, changement de mot de passe.\\\hline
+Tracer le parcours de soins (consultation) & EF-CONS-01/02 & Must & TST-CONS : création + feuille de maladie, visibilité par rôle, annulation.\\\hline
+Prescrire médicaments et orientations & EF-PRESC-01/02 & Must & TST-PRESC : médicament (durée), consultation spécialiste (motif).\\\hline
+Consulter les feuilles de maladie & EF-FM-01 & Must & TST-FM : filtres période/statut, lecture seule si remboursée.\\\hline
+Automatiser et fiabiliser les remboursements & EF-RB-01/02/03 & Must & TST-RB : calcul 100/80~\%, workflow d'états, justificatif PDF.\\\hline
+Piloter l'activité (décision) & EF-RB-04 & Should & TST-DASH : compteurs, montants, graphiques.\\\hline
+Garantir la conformité et la traçabilité & EF-AUD-01 & Must & TST-AUDIT : journalisation des opérations sensibles.\\\hline
+Informer les assurés & EF-NOT-01 & Should & TST-NOTIF : envoi de courriels, non-blocage en cas d'échec.\\\hline
+\end{longtable}
+\end{center}
+
+\end{document}

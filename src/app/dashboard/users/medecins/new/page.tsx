@@ -32,6 +32,7 @@ export default function NewMedecinPage() {
         specialiteLibelle: values.specialiteLibelle,
         telephone: values.telephone,
         estAssure: values.estAssure ?? false,
+        photoUrl: values.photoUrl,
       };
       const { data } = await api.post<Medecin>(apiConfig.endpoints.medecins, payload);
       return data;

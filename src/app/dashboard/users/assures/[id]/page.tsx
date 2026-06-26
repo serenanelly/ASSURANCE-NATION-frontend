@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ChevronRight, Stethoscope } from "@/components/icons";
+import { Avatar } from "@/components/common/Avatar";
 import { Header } from "@/components/common/Header";
 import { Card } from "@/components/common/Card";
 import { Button } from "@/components/common/Button";
@@ -96,7 +97,12 @@ export default function AssureDetailPage() {
   });
 
   const updateMutation = useMutation({
-    mutationFn: async (values: { nom: string; prenom: string; emploi?: string }) => {
+    mutationFn: async (values: {
+      nom: string;
+      prenom: string;
+      emploi?: string;
+      photoUrl?: string;
+    }) => {
       const { data } = await api.put<Assure>(
         `${apiConfig.endpoints.assures}/${params.id}`,
         values
@@ -147,9 +153,11 @@ export default function AssureDetailPage() {
         {/* Summary header */}
         <Card padding="lg">
           <div className="flex items-center gap-4">
-            <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-primary text-xl font-semibold text-white">
-              {getInitials(assure.nom, assure.prenom)}
-            </div>
+            <Avatar
+              photoUrl={assure.photoUrl}
+              initials={getInitials(assure.nom, assure.prenom)}
+              className="h-16 w-16 text-xl"
+            />
             <div className="min-w-0">
               <h2 className="truncate text-xl font-bold text-foreground">
                 {assure.prenom} {assure.nom}
@@ -299,12 +307,14 @@ export default function AssureDetailPage() {
                 nom: assure.nom,
                 prenom: assure.prenom,
                 emploi: assure.emploi,
+                photoUrl: assure.photoUrl,
               }}
               onSubmit={async (data) => {
                 await updateMutation.mutateAsync({
                   nom: data.nom,
                   prenom: data.prenom,
                   emploi: data.emploi,
+                  photoUrl: data.photoUrl,
                 });
               }}
               isSubmitting={updateMutation.isPending}

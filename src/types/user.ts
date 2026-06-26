@@ -12,6 +12,7 @@ export interface User {
   sexe?: Sexe;
   userType: UserType;
   roles: Set<Role> | Role[];
+  photoUrl?: string;
   createdAt?: string;
 }
 
@@ -24,6 +25,7 @@ export interface UpdateUserRequest {
   adresse?: string;
   telephone?: string;
   sexe?: Sexe;
+  photoUrl?: string;
 }
 
 export interface Medecin {
@@ -35,6 +37,7 @@ export interface Medecin {
   specialite: Specialite;
   specialiteLibelle?: string;
   estAssure: boolean;
+  photoUrl?: string;
 }
 
 export interface Assure {
@@ -47,6 +50,7 @@ export interface Assure {
   emploi?: string;
   medecinTraitantId?: string;
   estActif: boolean;
+  photoUrl?: string;
 }
 
 export interface RegisterMedecinRequest {
@@ -59,6 +63,7 @@ export interface RegisterMedecinRequest {
   specialiteLibelle?: string;
   telephone?: string;
   estAssure?: boolean;
+  photoUrl?: string;
 }
 
 export interface RegisterAssureRequest {
@@ -70,4 +75,5 @@ export interface RegisterAssureRequest {
   dateAffiliation?: string;
   emploi?: string;
   medecinTraitantId?: string;
+  photoUrl?: string;
 }

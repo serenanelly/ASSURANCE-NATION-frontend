@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Link from "next/link";
+import { useMutation } from "@tanstack/react-query";
 import {
   Calendar,
   Mail,
@@ -10,15 +11,21 @@ import {
   Settings,
   User as UserIcon,
 } from "@/components/icons";
+import { Avatar } from "@/components/common/Avatar";
 import { Badge } from "@/components/common/Badge";
 import { Card } from "@/components/common/Card";
 import { Tabs } from "@/components/common/Tabs";
 import { ProfileStats } from "@/components/dashboard/ProfileStats";
 import { useAuth } from "@/context/AuthContext";
+import { useNotification } from "@/context/NotificationContext";
+import api from "@/lib/api";
+import { apiConfig } from "@/config/api";
+import { parseApiError } from "@/lib/errors";
 import { formatDate, formatFullName } from "@/lib/formatters";
 import { getInitials, normalizeRoles } from "@/lib/utils";
 import { routes } from "@/config/routes";
 import { Role, UserType } from "@/types/enums";
+import type { User } from "@/types/user";
 
 const USER_TYPE_LABELS: Record<UserType, string> = {
   [UserType.MEDECIN]: "Médecin",
@@ -34,8 +41,42 @@ const ROLE_LABELS: Record<Role, string> = {
 };
 
 export default function ProfilePage() {
-  const { user } = useAuth();
+  const { user, updateUser } = useAuth();
+  const { success, error: notifyError } = useNotification();
   const [activeTab, setActiveTab] = useState("info");
+  const fileRef = useRef<HTMLInputElement>(null);
+
+  const photoMutation = useMutation({
+    mutationFn: async (photoUrl: string) => {
+      const { data } = await api.put<User>(
+        `${apiConfig.endpoints.users}/${user!.id}`,
+        { photoUrl }
+      );
+      return data;
+    },
+    onSuccess: (data) => {
+      updateUser(data);
+      success("Photo de profil mise à jour");
+    },
+    onError: (err) => notifyError(parseApiError(err).message),
+  });
+
+  const onPickPhoto = (file?: File) => {
+    if (!file) return;
+    if (!file.type.startsWith("image/")) {
+      notifyError("Veuillez choisir un fichier image.");
+      return;
+    }
+    if (file.size > 10 * 1024 * 1024) {
+      notifyError("Image trop volumineuse (max 10 Mo).");
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => {
+      if (typeof reader.result === "string") photoMutation.mutate(reader.result);
+    };
+    reader.readAsDataURL(file);
+  };
 
   if (!user) {
     return (
@@ -53,8 +94,27 @@ export default function ProfilePage() {
       {/* Header */}
       <div className="rounded-xl border border-gray-200 bg-card dark:border-gray-800">
         <div className="flex flex-col items-center px-6 py-10 sm:flex-row sm:items-end sm:gap-6 sm:pb-8 sm:pt-12">
-          <div className="flex h-24 w-24 shrink-0 items-center justify-center rounded-full bg-primary text-3xl font-bold text-white">
-            {initials}
+          <div className="flex flex-col items-center gap-1">
+            <Avatar
+              photoUrl={user.photoUrl}
+              initials={initials}
+              className="h-24 w-24 text-3xl"
+            />
+            <input
+              ref={fileRef}
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={(e) => onPickPhoto(e.target.files?.[0])}
+            />
+            <button
+              type="button"
+              onClick={() => fileRef.current?.click()}
+              disabled={photoMutation.isPending}
+              className="text-xs font-medium text-primary hover:underline disabled:opacity-60"
+            >
+              {photoMutation.isPending ? "Envoi…" : "Changer la photo"}
+            </button>
           </div>
           <div className="mt-4 text-center sm:mt-0 sm:flex-1 sm:text-left">
             <h1 className="text-2xl font-bold text-foreground sm:text-3xl">

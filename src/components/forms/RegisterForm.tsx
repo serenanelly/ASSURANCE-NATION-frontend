@@ -20,6 +20,8 @@ import {
 import { Button } from "@/components/common/Button";
 import { Input } from "@/components/common/Input";
 import { Select } from "@/components/common/Select";
+import { ImageUpload } from "@/components/common/ImageUpload";
+import { getInitials } from "@/lib/utils";
 import { useAuth } from "@/context/AuthContext";
 import { useNotification } from "@/context/NotificationContext";
 import { registerSchema } from "@/lib/validators";
@@ -33,6 +35,7 @@ const extendedRegisterSchema = registerSchema
   .extend({
     specialite: z.string().optional(),
     specialiteLibelle: z.string().optional(),
+    photoUrl: z.string().optional(),
     emploi: z.string().optional(),
     dateAffiliation: z.string().optional(),
   })
@@ -126,6 +129,7 @@ export function RegisterForm() {
       numeroRPPS: "",
       specialite: "",
       specialiteLibelle: "",
+      photoUrl: "",
       numSecuriteSociale: "",
       emploi: "",
       dateAffiliation: "",
@@ -173,6 +177,7 @@ export function RegisterForm() {
       prenom: data.prenom,
       telephone: data.telephone,
       userType: data.userType,
+      photoUrl: data.photoUrl,
     };
 
     if (data.userType === UserType.MEDECIN) {
@@ -263,6 +268,11 @@ export function RegisterForm() {
 
       {step === 2 && (
         <div className="space-y-4">
+          <ImageUpload
+            value={watch("photoUrl")}
+            onChange={(v) => setValue("photoUrl", v)}
+            initials={getInitials(watch("nom") || "", watch("prenom") || "")}
+          />
           <div className="grid gap-4 sm:grid-cols-2">
             <Input
               label="Prénom"

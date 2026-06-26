@@ -20,6 +20,7 @@ export interface RegisterRequest {
   numeroRPPS?: string;
   specialite?: string;
   specialiteLibelle?: string;
+  photoUrl?: string;
   numSecuriteSociale?: string;
   dateAffiliation?: string;
   emploi?: string;

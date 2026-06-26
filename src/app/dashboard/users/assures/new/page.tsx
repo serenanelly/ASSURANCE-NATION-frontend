@@ -31,6 +31,7 @@ export default function NewAssurePage() {
         dateAffiliation: values.dateAffiliation,
         emploi: values.emploi,
         medecinTraitantId: values.medecinTraitantId || undefined,
+        photoUrl: values.photoUrl,
       };
       const { data } = await api.post<Assure>(apiConfig.endpoints.assures, payload);
       return data;

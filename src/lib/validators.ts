@@ -131,6 +131,7 @@ export const userUpdateSchema = z.object({
   prenom: z.string().min(1, "Le prénom est requis").optional(),
   telephone: z.string().optional(),
   adresse: z.string().optional(),
+  photoUrl: z.string().optional(),
 });
 
 export type LoginFormValues = z.infer<typeof loginSchema>;
@@ -153,6 +154,7 @@ export const registerAssureSchema = z
     dateAffiliation: z.string().optional(),
     emploi: z.string().optional(),
     medecinTraitantId: z.string().uuid().optional(),
+    photoUrl: z.string().optional(),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Les mots de passe ne correspondent pas",
@@ -173,6 +175,7 @@ export const registerMedecinSchema = z
     specialiteLibelle: z.string().optional(),
     telephone: z.string().optional(),
     estAssure: z.boolean().optional(),
+    photoUrl: z.string().optional(),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Les mots de passe ne correspondent pas",
@@ -197,6 +200,7 @@ export const assureUpdateSchema = z.object({
   nom: z.string().min(1, "Le nom est requis"),
   prenom: z.string().min(1, "Le prénom est requis"),
   emploi: z.string().optional(),
+  photoUrl: z.string().optional(),
 });
 
 export const medecinUpdateSchema = z
@@ -208,6 +212,7 @@ export const medecinUpdateSchema = z
     specialiteLibelle: z.string().optional(),
     telephone: z.string().optional(),
     estAssure: z.boolean().optional(),
+    photoUrl: z.string().optional(),
   })
   .superRefine((data, ctx) => {
     if (data.specialite === Specialite.SPECIALISTE && !data.specialiteLibelle?.trim()) {

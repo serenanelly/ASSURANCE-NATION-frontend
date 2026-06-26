@@ -18,6 +18,7 @@ import {
   Users,
   Wallet,
 } from "@/components/icons";
+import { Avatar } from "@/components/common/Avatar";
 import { Logo } from "@/components/common/Logo";
 import { useAuth } from "@/context/AuthContext";
 import { usePermissions } from "@/hooks/usePermissions";
@@ -188,12 +189,11 @@ export function Sidebar() {
         <div className="p-3">
           {collapsed ? (
             <div className="flex flex-col items-center gap-2">
-              <div
-                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary text-sm font-semibold text-white"
-                aria-hidden
-              >
-                {getInitials(user.nom, user.prenom)}
-              </div>
+              <Avatar
+                photoUrl={user.photoUrl}
+                initials={getInitials(user.nom, user.prenom)}
+                className="h-10 w-10 text-sm"
+              />
               <button
                 type="button"
                 onClick={() => logout()}
@@ -205,12 +205,11 @@ export function Sidebar() {
             </div>
           ) : (
             <div className="flex items-center gap-3 rounded-lg bg-gray-100 p-3 dark:bg-gray-800">
-              <div
-                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary text-sm font-semibold text-white"
-                aria-hidden
-              >
-                {getInitials(user.nom, user.prenom)}
-              </div>
+              <Avatar
+                photoUrl={user.photoUrl}
+                initials={getInitials(user.nom, user.prenom)}
+                className="h-10 w-10 text-sm"
+              />
               <div className="min-w-0 flex-1">
                 <p className="truncate text-sm font-semibold">
                   {formatFullName(user.nom, user.prenom)}
